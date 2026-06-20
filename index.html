@@ -18,7 +18,7 @@
      MOTION_INTENSITY: 6 (fluid transitions, tasteful animation)
      VISUAL_DENSITY: 4  (atmospheric, considered whitespace)
 
-   Color: Single-accent warm coral (#e8784a), deep warm-dark background
+   Color: Single-accent slate blue (#4762b3), cold minimalist light background
    Typography: Outfit (headings) + system-ui (body) + Playfair Display (personality name accent)
    Border Radius: 14px system-wide
    Layout: Asymmetric hero, Grid-first, no centering
@@ -134,8 +134,8 @@ body {
 
 .landing-orb {
   width: 240px; height: 240px; border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, rgba(71,98,179,0.2) 0%, rgba(232,120,74,0.05) 50%, transparent 70%);
-  box-shadow: 0 0 60px rgba(71,98,179,0.1), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06);
+  background: radial-gradient(circle at 40% 35%, rgba(71,98,179,0.2) 0%, rgba(71,98,179,0.05) 50%, transparent 70%);
+  box-shadow: 0 0 60px rgba(71,98,179,0.1), 0 0 160px rgba(71,98,179,0.08), inset 0 0 60px rgba(71,98,179,0.06);
   animation: orbPulse 4s ease-in-out infinite;
   position: relative;
 }
@@ -147,8 +147,8 @@ body {
 }
 
 @keyframes orbPulse {
-  0%, 100% { box-shadow: 0 0 60px rgba(71,98,179,0.1), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06); }
-  50% { box-shadow: 0 0 80px rgba(71,98,179,0.15), 0 0 200px rgba(71,98,179,0.15), inset 0 0 80px rgba(232,120,74,0.1); }
+  0%, 100% { box-shadow: 0 0 60px rgba(71,98,179,0.1), 0 0 160px rgba(71,98,179,0.08), inset 0 0 60px rgba(71,98,179,0.06); }
+  50% { box-shadow: 0 0 80px rgba(71,98,179,0.15), 0 0 200px rgba(71,98,179,0.15), inset 0 0 80px rgba(71,98,179,0.1); }
 }
 
 @keyframes orbFloat {
@@ -173,7 +173,7 @@ body {
 
 .nickname-input:focus {
   border-color: var(--border-active);
-  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 20px rgba(232,120,74,0.08);
+  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 16px rgba(71,98,179,0.1);
 }
 
 .btn {
@@ -250,7 +250,7 @@ body {
 
 .option-btn::before {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 0% 0%, rgba(232,120,74,0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 0% 0%, rgba(71,98,179,0.06) 0%, transparent 70%);
   opacity: 0; transition: opacity 0.3s;
 }
 
@@ -299,7 +299,7 @@ body {
   border-radius: var(--radius);
   padding: 32px 28px;
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 0 40px rgba(232,120,74,0.06);
+  box-shadow: 0 0 40px rgba(71,98,179,0.05);
   animation: cardReveal 0.7s var(--ease-out);
 }
 
@@ -336,7 +336,7 @@ body {
   padding: 6px 14px;
   background: var(--accent-soft); color: var(--accent);
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(232,120,74,0.15);
+  border: 1px solid var(--border-active);
 }
 
 .result-section { margin-bottom: 16px; }
@@ -357,7 +357,7 @@ body {
   border-left: 2px solid var(--accent);
 }
 
-.result-section-body.pain { border-left-color: #ef4444; }
+.result-section-body.pain { border-left-color: #6b8ac4; }
 
 /* Radar card */
 .radar-card {
@@ -387,10 +387,10 @@ body {
 .legend-dot {
   width: 8px; height: 8px; border-radius: 50%; display: inline-block;
 }
-.legend-dot.D { background: #f59e0b; }
-.legend-dot.S { background: #ef4444; }
-.legend-dot.E { background: #8b5cf6; }
-.legend-dot.O { background: #10b981; }
+.legend-dot.D { background: #4762b3; }
+.legend-dot.S { background: #6b8ac4; }
+.legend-dot.E { background: #93a4d1; }
+.legend-dot.O { background: #5a7db8; }
 
 .result-actions {
   display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;
@@ -1362,7 +1362,7 @@ function drawRadar(scores) {
   ];
   var labels = ['D 安全感', 'S 共振力', 'E 决策力', 'O 开放性'];
   var values = [scores.D, scores.S, scores.E, scores.O];
-  var colors = ['#f59e0b', '#ef4444', '#8b5cf6', '#10b981'];
+  var colors = ['#4762b3', '#6b8ac4', '#93a4d1', '#5a7db8'];
 
   ctx.clearRect(0, 0, W, H);
 
@@ -1768,7 +1768,7 @@ document.addEventListener('keydown', function(e) {
 
 // ---------- Init ----------
 console.log('%c💝 恋爱人格代码 %cv2.0 - 四维模型版',
-  'font-size:1.2em;color:#e8784a', 'color:#a89888');
+  'font-size:1.2em;color:#4762b3', 'color:#a89888');
 console.log('%c基于恋爱认知-行为四维模型 | 15道情景题 | 14种人格类型',
   'color:#6b5d53;font-size:0.85em');
 console.log('%cDesigned with Taste Skill v2',
