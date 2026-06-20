@@ -1162,7 +1162,7 @@ nicknameInput.addEventListener('input', function() {
 });
 
 nicknameInput.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && state.nickname) startTest();
+  if (e.key === 'Enter' && state.nickname) showScreenExt(screenModeSelect);
 });
 
 btnStart.addEventListener('click', startTest);
