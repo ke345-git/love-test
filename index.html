@@ -793,6 +793,13 @@ body {
 <div id="toastContainer"></div>
 
 <script>
+// Error diagnostic banner
+window.onerror = function(msg, url, line) {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#dc2626;color:#fff;padding:12px 16px;font-size:13px;font-family:monospace;white-space:pre-wrap';
+  el.textContent = 'JS ERROR (line ' + line + '): ' + msg;
+  document.body.appendChild(el);
+};
 (function() {
 'use strict';
   // ===== Supabase Config =====
