@@ -1839,6 +1839,7 @@ const PSYCHOLOGISTS = [
 ];
 
 var currentPersona = null;
+var testContext = null; // Store test results for AI discussion
 var chatMessages = [];
 var isChatting = false;
 
@@ -1921,8 +1922,16 @@ function startAIChat() {
   chatInput.focus();
 
   // Show typing, then get AI opening message
+  // If coming from test results, include context in first message
+  var initialMessages = [];
+  if (testContext) {
+    var ctx = testContext;
+    var ctxMsg = '[The user just completed a personality test. Results: ' + ctx.personality.emoji + ' ' + ctx.personality.name + ', Code: ' + ctx.code + ', Scores: D=' + ctx.scores.D + ' S=' + ctx.scores.S + ' E=' + ctx.scores.E + ' O=' + ctx.scores.O + '. Description: ' + ctx.personality.desc + ' Pain point: ' + ctx.personality.pain + '. Please reference these results in the conversation and offer personalized insights based on their personality type.]';
+    chatMessages.push({ role: 'user', content: ctxMsg });
+    testContext = null;
+  }
   showTyping();
-  sendToAI([], function(reply) {
+  sendToAI(chatMessages, function(reply) {
     hideTyping();
     addAIMessage(reply);
   });
@@ -2222,6 +2231,22 @@ renderResults = function() {
     aiBtn.id = 'btnAIAnalysis';
     aiBtn.textContent = 'AI Analysis';
     aiBtn.addEventListener('click', generateAIAnalysis);
+
+    // Discuss with psychologist button
+    var discussBtn = document.createElement('button');
+    discussBtn.className = 'btn btn-primary';
+    discussBtn.id = 'btnDiscussWithPsycho';
+    discussBtn.textContent = 'Discuss with Psychologist';
+    discussBtn.addEventListener('click', function() {
+      testContext = {
+        personality: PERSONALITIES[state.personality],
+        scores: state.scores,
+        code: 'D' + state.scores.D + '-S' + state.scores.S + '-E' + state.scores.E + '-O' + state.scores.O
+      };
+      showScreenExt(screenPsychologist);
+      renderPsychologistCards();
+    });
+    actionsRow.appendChild(discussBtn);
     actionsRow.appendChild(aiBtn);
 
     // AI analysis container
