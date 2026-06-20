@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/submit.js": {
+      "memory": 128,
+      "maxDuration": 10
+    },
+    "api/results.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  }
+}

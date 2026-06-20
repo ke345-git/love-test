@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>恋爱人格代码</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   Designed with Taste Skill v2
+   恋爱人格代码 — Love Personality Code
+   基于恋爱认知-行为四维模型（D/S/E/O）
+
+   Taste Skill Parameters:
+     DESIGN_VARIANCE: 7  (asymmetric, artistic layouts)
+     MOTION_INTENSITY: 6 (fluid transitions, tasteful animation)
+     VISUAL_DENSITY: 4  (atmospheric, considered whitespace)
+
+   Color: Single-accent warm coral (#e8784a), deep warm-dark background
+   Typography: Outfit (headings) + system-ui (body) + Playfair Display (personality name accent)
+   Border Radius: 14px system-wide
+   Layout: Asymmetric hero, Grid-first, no centering
+   ============================================ */
+:root {
+  --bg-deep: #0f0a06;
+  --bg-surface: #1a1210;
+  --glass: rgba(25, 16, 10, 0.65);
+  --glass-hover: rgba(35, 22, 14, 0.8);
+  --accent: #e8784a;
+  --accent-soft: rgba(232, 120, 74, 0.18);
+  --accent-glow: rgba(232, 120, 74, 0.35);
+  --text: #faf5f0;
+  --text-dim: #a89888;
+  --text-muted: #6b5d53;
+  --border: rgba(232, 120, 74, 0.12);
+  --border-active: rgba(232, 120, 74, 0.4);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-accent: 'Playfair Display', 'Georgia', serif;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+.bg-ambient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 20%, rgba(232,120,74,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 80% 70%, rgba(232,120,74,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(180,100,60,0.03) 0%, transparent 100%);
+}
+
+.bg-ambient::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+.progress-wrap {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 3px; background: rgba(255,255,255,0.04);
+}
+.progress-bar {
+  height: 100%; background: var(--accent);
+  width: 0%; transition: width 0.5s var(--ease-out);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+#app {
+  position: relative; z-index: 1;
+  max-width: 960px; margin: 0 auto;
+  padding: 0 24px; min-height: 100dvh;
+  display: flex; flex-direction: column;
+}
+
+.screen { display: none; flex: 1; animation: screenIn 0.5s var(--ease-out); }
+.screen.active { display: flex; flex-direction: column; }
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Landing */
+#screen-landing { display: none; flex: 1; align-items: flex-start; justify-content: center; flex-direction: column; padding: 12vh 0 8vh; }
+#screen-landing.active { display: flex; }
+
+.landing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; width: 100%; }
+.landing-content { display: flex; flex-direction: column; gap: 28px; }
+
+.landing-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.8rem; font-weight: 500; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+.landing-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 4rem);
+  font-weight: 600; line-height: 1.08; letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.landing-title span {
+  display: block;
+  font-family: var(--font-accent);
+  font-style: italic; font-weight: 500;
+  color: var(--accent);
+  font-size: 0.85em; margin-top: 4px;
+}
+
+.landing-desc {
+  font-size: 1.05rem; color: var(--text-dim);
+  max-width: 38ch; line-height: 1.7;
+}
+
+.landing-visual { display: flex; align-items: center; justify-content: center; position: relative; }
+
+.landing-orb {
+  width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(232,120,74,0.25) 0%, rgba(232,120,74,0.05) 50%, transparent 70%);
+  box-shadow: 0 0 80px rgba(232,120,74,0.2), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06);
+  animation: orbPulse 4s ease-in-out infinite;
+  position: relative;
+}
+
+.landing-orb::after {
+  content: '💝'; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem; animation: orbFloat 3s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+  0%, 100% { box-shadow: 0 0 80px rgba(232,120,74,0.2), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06); }
+  50% { box-shadow: 0 0 120px rgba(232,120,74,0.3), 0 0 200px rgba(232,120,74,0.12), inset 0 0 80px rgba(232,120,74,0.1); }
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Form Elements */
+.input-group { display: flex; flex-direction: column; gap: 12px; max-width: 360px; }
+
+.nickname-input {
+  font-family: var(--font-body);
+  font-size: 1rem; padding: 14px 18px;
+  background: var(--glass); color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius); outline: none;
+  transition: all 0.3s var(--ease-out);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+
+.nickname-input::placeholder { color: var(--text-muted); }
+
+.nickname-input:focus {
+  border-color: var(--border-active);
+  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 20px rgba(232,120,74,0.08);
+}
+
+.btn {
+  font-family: var(--font-display);
+  font-size: 0.95rem; font-weight: 500;
+  padding: 14px 28px; border: none;
+  border-radius: var(--radius); cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+
+.btn-primary {
+  background: var(--accent); color: #fff;
+  box-shadow: 0 2px 20px rgba(232,120,74,0.3);
+}
+
+.btn-primary:hover {
+  background: #f08050;
+  box-shadow: 0 4px 28px rgba(232,120,74,0.45);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  background: transparent; color: var(--text);
+  border: 1.5px solid var(--border);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-ghost:hover { background: var(--glass-hover); border-color: var(--border-active); }
+.btn-small { font-size: 0.85rem; padding: 10px 20px; }
+
+/* Question Screen */
+#screen-questions { padding: 12vh 0 4vh; }
+#screen-questions.active { display: flex; flex-direction: column; }
+
+.question-wrap { flex: 1; display: flex; flex-direction: column; gap: 28px; }
+
+.question-header {
+  display: flex; align-items: center; gap: 16px;
+  font-family: var(--font-display);
+  font-size: 0.85rem; color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.question-counter { color: var(--accent); font-weight: 600; }
+
+.question-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+  font-weight: 500; line-height: 1.45;
+  color: var(--text); max-width: 30ch;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px; max-width: 680px;
+}
+
+.option-btn {
+  font-family: var(--font-body);
+  font-size: 0.92rem; line-height: 1.5;
+  padding: 16px 18px; text-align: left;
+  background: var(--glass); color: var(--text-dim);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius); cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  position: relative; overflow: hidden;
+}
+
+.option-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 0% 0%, rgba(232,120,74,0.08) 0%, transparent 70%);
+  opacity: 0; transition: opacity 0.3s;
+}
+
+.option-btn:hover {
+  border-color: var(--border-active); color: var(--text);
+  transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.option-btn:hover::before { opacity: 1; }
+
+.option-btn.selected {
+  border-color: var(--accent); color: var(--text);
+  background: rgba(232,120,74,0.12);
+  transform: scale(1.02);
+  box-shadow: 0 0 0 2px var(--accent-soft), 0 0 28px rgba(232,120,74,0.12), 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.option-btn.selected::before { opacity: 1; }
+
+.option-label {
+  display: inline-block; font-family: var(--font-display);
+  font-size: 0.75rem; font-weight: 600; color: var(--accent);
+  margin-right: 8px; letter-spacing: 0.05em;
+}
+
+.question-fade-enter { animation: qFadeIn 0.45s var(--ease-out); }
+
+@keyframes qFadeIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Results Screen */
+#screen-results { padding: 6vh 0; }
+#screen-results.active { display: flex; flex-direction: column; }
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px; align-items: start;
+}
+
+.result-card {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 0 40px rgba(232,120,74,0.06);
+  animation: cardReveal 0.7s var(--ease-out);
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.result-type-emoji { font-size: 3rem; line-height: 1; margin-bottom: 8px; }
+
+.result-type-name {
+  font-family: var(--font-accent);
+  font-size: 1.8rem; font-weight: 600; font-style: italic;
+  color: var(--accent); line-height: 1.2; margin-bottom: 8px;
+}
+
+.result-code {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 500;
+  color: var(--text-dim); letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+.result-type-desc {
+  font-size: 0.92rem; color: var(--text-dim);
+  line-height: 1.75; margin-bottom: 20px;
+}
+
+.result-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+
+.result-tag {
+  font-family: var(--font-display);
+  font-size: 0.78rem; font-weight: 500;
+  padding: 6px 14px;
+  background: var(--accent-soft); color: var(--accent);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(232,120,74,0.15);
+}
+
+.result-section { margin-bottom: 16px; }
+
+.result-section-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--text); margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+
+.result-section-body {
+  font-size: 0.88rem; color: var(--text-dim);
+  line-height: 1.7;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--accent);
+}
+
+.result-section-body.pain { border-left-color: #ef4444; }
+
+/* Radar card */
+.radar-card {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+
+.radar-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem; font-weight: 500;
+  color: var(--text-dim); letter-spacing: 0.04em;
+}
+
+.radar-card canvas { max-width: 100%; height: auto; }
+
+.radar-legend {
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  font-size: 0.8rem; color: var(--text-dim);
+}
+
+.radar-legend span { display: flex; align-items: center; gap: 5px; }
+
+.legend-dot {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+}
+.legend-dot.D { background: #f59e0b; }
+.legend-dot.S { background: #ef4444; }
+.legend-dot.E { background: #8b5cf6; }
+.legend-dot.O { background: #10b981; }
+
+.result-actions {
+  display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;
+}
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+  background: var(--glass); color: var(--text);
+  border: 1px solid var(--border-active);
+  padding: 12px 24px; border-radius: var(--radius);
+  font-size: 0.9rem; z-index: 200;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  animation: toastIn 0.4s var(--ease-spring);
+  pointer-events: none;
+}
+
+.toast.out { animation: toastOut 0.3s ease-in forwards; }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
+
+/* Admin */
+.admin-trigger { text-align: center; padding: 24px 0 40px; }
+
+.admin-trigger button {
+  font-family: var(--font-body);
+  font-size: 0.82rem; color: var(--text-muted);
+  background: none; border: none; cursor: pointer;
+  transition: color 0.3s;
+}
+
+.admin-trigger button:hover { color: var(--text-dim); }
+
+.admin-overlay {
+  display: none; position: fixed; inset: 0; z-index: 150;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+
+.admin-overlay.open { display: flex; }
+
+.admin-panel {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px; max-width: 860px; width: 92vw; max-height: 82dvh;
+  overflow-y: auto; position: relative;
+}
+
+.admin-panel h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem; font-weight: 600; margin-bottom: 20px;
+  color: var(--text);
+}
+
+.admin-close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; color: var(--text-muted);
+  font-size: 1.5rem; cursor: pointer; padding: 4px 8px;
+}
+
+.admin-close:hover { color: var(--text); }
+
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+
+.admin-table th {
+  text-align: left; padding: 10px 8px;
+  font-family: var(--font-display); font-weight: 500;
+  color: var(--text-dim); border-bottom: 1px solid var(--border);
+  font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase;
+}
+
+.admin-table td {
+  padding: 10px 8px; color: var(--text-dim);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.admin-table tr:hover td { color: var(--text); background: rgba(255,255,255,0.02); }
+
+.admin-empty { text-align: center; padding: 40px; color: var(--text-muted); }
+
+.admin-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .landing-grid { grid-template-columns: 1fr; gap: 32px; }
+  .landing-visual { order: -1; }
+  .landing-orb { width: 160px; height: 160px; }
+  .landing-orb::after { font-size: 2.8rem; }
+  .options-grid { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr; gap: 24px; }
+  .result-card { padding: 24px 20px; }
+  .result-type-emoji { font-size: 2.4rem; }
+  .result-type-name { font-size: 1.4rem; }
+  #screen-questions { padding: 8vh 0 3vh; }
+  #screen-landing { padding: 8vh 0 4vh; }
+}
+
+@media (max-width: 480px) {
+  #app { padding: 0 16px; }
+  .landing-title { font-size: 2.2rem; }
+  .admin-panel { padding: 20px; width: 95vw; }
+  .admin-table { font-size: 0.68rem; }
+  .admin-table th, .admin-table td { padding: 6px 6px; }
+}
+
+/* -- Detail Overlay -- */
+.detail-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); z-index: 1001;
+  display: flex; align-items: center; justify-content: center;
+}
+.detail-content { max-width: 540px; width: 90%; max-height: 85vh; }
+.detail-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.detail-card .admin-close { position: absolute; top: 12px; right: 16px; }
+
+/* -- Spinner -- */
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="bg-ambient"></div>
+
+<div id="app">
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Landing -->
+  <section class="screen active" id="screen-landing">
+    <div class="landing-grid">
+      <div class="landing-content">
+        <p class="landing-eyebrow">Love Personality Code</p>
+        <h1 class="landing-title">恋爱人格<span>代码</span></h1>
+        <p class="landing-desc">
+          基于恋爱认知-行为四维模型，通过 15 道情景选择题，解码你独一无二的恋爱人格。依恋安全感、情绪共振力、关系决策力与开放性，你的四维代码是什么？
+        </p>
+        <div class="input-group">
+          <input type="text" class="nickname-input" id="nicknameInput" placeholder="输入你的昵称" maxlength="20" autocomplete="off">
+          <button class="btn btn-primary" id="btnStart" disabled>
+            开始测试
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="landing-visual">
+        <div class="landing-orb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Questions -->
+  <section class="screen" id="screen-questions">
+    <div class="question-wrap" id="questionWrap"></div>
+  </section>
+
+  <!-- Results -->
+  <section class="screen" id="screen-results">
+    <div class="result-grid" id="resultGrid"></div>
+  </section>
+
+  <!-- Admin Trigger -->
+  <div class="admin-trigger">
+    <button id="btnAdminTrigger">📊 管理后台</button>
+  </div>
+</div>
+
+<!-- Admin Overlay -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-panel" id="adminPanel"></div>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+(function() {
+'use strict';
+
+/* ============================================
+   恋爱人格代码 - 四维模型版
+   Dimensions: D(依恋安全感) S(情绪共振力) E(关系决策力) O(开放性)
+   15 questions, 14 personality types
+   ============================================ */
+
+// ---------- Question Bank ----------
+// Each option: { label, text, effect: { D, S, E, O } }
+// effect values: +1, -1, or 0 (neutral)
+const QUESTIONS = [
+  {
+    id: 1, dim: 'D',
+    text: '你和伴侣已经两天没有联系了（没有吵架，只是各自忙）。你的内心状态更接近？',
+    options: [
+      { label: 'A', text: '开始不安，反复查看手机，甚至想主动发消息试探', effect: { D: -1, S: 0, E: 0, O: 0 } },
+      { label: 'B', text: '有点想他，但知道忙完自然会联系，继续专心做自己的事', effect: { D: 1, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '觉得这种距离感很好，甚至享受一个人的自由', effect: { D: 1, S: 0, E: 0, O: 0 } },
+      { label: 'D', text: '怀疑他是不是在冷暴力，已经开始设想最坏的结果', effect: { D: -1, S: 0, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 2, dim: 'S',
+    text: '伴侣在工作中受到委屈，回家后沉默不语。你的第一反应是？',
+    options: [
+      { label: 'A', text: '走过去抱住他，什么都不问，等他愿意说', effect: { D: 0, S: 1, E: 0, O: 0 } },
+      { label: 'B', text: '给他倒杯水，然后安静地坐在旁边，让他感受到陪伴', effect: { D: 0, S: 1, E: 0, O: 0 } },
+      { label: 'C', text: '问他"发生什么事了"，然后用理性分析帮他找到解决办法', effect: { D: 0, S: -1, E: 0, O: 0 } },
+      { label: 'D', text: '觉得他需要空间，自己去另一个房间，等他情绪平复', effect: { D: 0, S: -1, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 3, dim: 'E',
+    text: '你们计划周末去旅行，但伴侣说"我都行，你来定吧"，你会？',
+    options: [
+      { label: 'A', text: '迅速做好全部攻略，订好酒店，只告诉对方"收拾行李就行"', effect: { D: 0, S: 0, E: 1, O: 0 } },
+      { label: 'B', text: '选三个方案让对方选，给对方一定的参与感', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '有点焦虑，觉得责任太大，希望对方至少给点方向', effect: { D: 0, S: 0, E: -1, O: 0 } },
+      { label: 'D', text: '提议干脆不计划了，到了再说，享受随机性', effect: { D: 0, S: 0, E: -1, O: 0 } }
+    ]
+  },
+  {
+    id: 4, dim: 'O',
+    text: '关于"开放式关系"或"多元恋爱"的讨论，你的看法是？',
+    options: [
+      { label: 'A', text: '完全不能接受，一对一是关系的底线', effect: { D: 0, S: 0, E: 0, O: -1 } },
+      { label: 'B', text: '理论上理解，但自己不会尝试', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '觉得在特定条件下可以探讨，不排斥', effect: { D: 0, S: 0, E: 0, O: 1 } },
+      { label: 'D', text: '认为是未来关系的一种可能形态，值得尝试', effect: { D: 0, S: 0, E: 0, O: 1 } }
+    ]
+  },
+  {
+    id: 5, dim: 'D',
+    text: '伴侣出差一周，出发前他说"到了联系你"，但第一天晚上没有消息。你会？',
+    options: [
+      { label: 'A', text: '理解他可能太累，第二天早上主动发条"早安"就好', effect: { D: 1, S: 0, E: 0, O: 0 } },
+      { label: 'B', text: '等到凌晨还没消息，开始焦虑到失眠，脑补各种意外', effect: { D: -1, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '心里有点失落，但告诉自己"成年人需要自己的空间"', effect: { D: 1, S: 0, E: 0, O: 0 } },
+      { label: 'D', text: '发消息"你到了吗？"如果对方不回，开始怀疑感情变淡', effect: { D: -1, S: 0, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 6, dim: 'S',
+    text: '朋友正在经历分手，哭得很伤心，你如何安慰她？',
+    options: [
+      { label: 'A', text: '听她说完，然后告诉她"我理解你为什么这么难过，换做是我也会"', effect: { D: 0, S: 1, E: 0, O: 0 } },
+      { label: 'B', text: '抱住她，陪她一起哭，不说什么大道理', effect: { D: 0, S: 1, E: 0, O: 0 } },
+      { label: 'C', text: '告诉她"你会遇到更好的，不值得为这个人难过"', effect: { D: 0, S: -1, E: 0, O: 0 } },
+      { label: 'D', text: '帮她分析这段感情的问题所在，让她理性看待', effect: { D: 0, S: -1, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 7, dim: 'E',
+    text: '在恋爱中，你更习惯扮演哪种角色？',
+    options: [
+      { label: 'A', text: '主导者：习惯由我来安排约会、决定节奏', effect: { D: 0, S: 0, E: 1, O: 0 } },
+      { label: 'B', text: '协作者：喜欢商量着来，共同决策', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '跟随者：对方安排好了我就配合，不太主动提要求', effect: { D: 0, S: 0, E: -1, O: 0 } },
+      { label: 'D', text: '随机应变者：看心情，有时主动有时被动', effect: { D: 0, S: 0, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 8, dim: 'O',
+    text: '以下哪种恋爱模式让你觉得"最理想"？',
+    options: [
+      { label: 'A', text: '传统的男主外女主内或等价分工模式', effect: { D: 0, S: 0, E: 0, O: -1 } },
+      { label: 'B', text: '各自保持独立事业，但生活上互相照顾', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '互相不干涉对方社交圈，甚至偶尔分开旅行', effect: { D: 0, S: 0, E: 0, O: 1 } },
+      { label: 'D', text: '完全没有固定模式，两个人随时调整', effect: { D: 0, S: 0, E: 0, O: 1 } }
+    ]
+  },
+  {
+    id: 9, dim: 'D',
+    text: '你曾经在恋爱中因为"对方没有及时回消息"而发过脾气吗？',
+    options: [
+      { label: 'A', text: '经常会，而且觉得这是对方不重视自己的表现', effect: { D: -1, S: 0, E: 0, O: 0 } },
+      { label: 'B', text: '偶尔会，但事后会觉得自己有点过分', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '基本不会，除非对方长期失联', effect: { D: 1, S: 0, E: 0, O: 0 } },
+      { label: 'D', text: '完全不会，甚至觉得回不回消息是对方的自由', effect: { D: 1, S: 0, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 10, dim: 'S',
+    text: '看一部爱情电影，结局是悲剧，你的反应是？',
+    options: [
+      { label: 'A', text: '哭到停不下来，情绪沉浸其中好几天', effect: { D: 0, S: 1, E: 0, O: 0 } },
+      { label: 'B', text: '觉得遗憾但能接受，生活就是这样', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '不太理解为什么主角要这么选择，觉得不够理性', effect: { D: 0, S: -1, E: 0, O: 0 } },
+      { label: 'D', text: '看完就翻篇了，不会带入太多情绪', effect: { D: 0, S: -1, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 11, dim: 'E',
+    text: '遇到感情问题时，你更倾向？',
+    options: [
+      { label: 'A', text: '直面问题，主动提出解决方案并推进执行', effect: { D: 0, S: 0, E: 1, O: 0 } },
+      { label: 'B', text: '先冷静几天，等情绪平复再沟通', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '等对方先开口，自己不愿意当"先低头"的那个人', effect: { D: 0, S: 0, E: -1, O: 0 } },
+      { label: 'D', text: '干脆不提了，让时间解决一切', effect: { D: 0, S: 0, E: -1, O: 0 } }
+    ]
+  },
+  {
+    id: 12, dim: 'O',
+    text: '你的伴侣告诉你，他有一个"红颜知己"或"蓝颜知己"，你会？',
+    options: [
+      { label: 'A', text: '明确表示不满，要求他保持距离', effect: { D: 0, S: 0, E: 0, O: -1 } },
+      { label: 'B', text: '心里不舒服，但选择相信他，不干涉', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '觉得正常，自己也希望保持异性朋友', effect: { D: 0, S: 0, E: 0, O: 1 } },
+      { label: 'D', text: '好奇对方是什么样的，甚至想认识一下做朋友', effect: { D: 0, S: 0, E: 0, O: 1 } }
+    ]
+  },
+  {
+    id: 13, dim: 'D',
+    text: '伴侣和异性单独吃饭没有提前告诉你，你知道后的第一反应是？',
+    options: [
+      { label: 'A', text: '直接问他"你为什么不告诉我"，心里已经开始怀疑', effect: { D: -1, S: 0, E: 0, O: 0 } },
+      { label: 'B', text: '有点意外，但觉得没什么大不了的', effect: { D: 1, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '完全不介意，甚至不会主动提起这件事', effect: { D: 1, S: 0, E: 0, O: 0 } },
+      { label: 'D', text: '虽然嘴上说没事，但会偷偷看他的聊天记录', effect: { D: -1, S: 0, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 14, dim: 'S',
+    text: '伴侣情绪很低落，但你不知道具体原因。你会？',
+    options: [
+      { label: 'A', text: '反复追问"你到底怎么了""你告诉我才能帮你"', effect: { D: 0, S: -1, E: 0, O: 0 } },
+      { label: 'B', text: '默默陪伴，用行动传递"我在你身边"', effect: { D: 0, S: 1, E: 0, O: 0 } },
+      { label: 'C', text: '给他做一顿好吃的，用食物和温暖来缓解情绪', effect: { D: 0, S: 1, E: 0, O: 0 } },
+      { label: 'D', text: '尊重他的沉默，等他主动说出来', effect: { D: 0, S: 0, E: 0, O: 0 } }
+    ]
+  },
+  {
+    id: 15, dim: 'E+O',
+    text: '你对"婚姻"的看法更接近？',
+    options: [
+      { label: 'A', text: '人生必经之路，需要认真规划', effect: { D: 0, S: 0, E: 1, O: -1 } },
+      { label: 'B', text: '两个人的契约，但不是必需品', effect: { D: 0, S: 0, E: 0, O: 0 } },
+      { label: 'C', text: '一种可以随时进入和退出的关系形式', effect: { D: 0, S: 0, E: -1, O: 1 } },
+      { label: 'D', text: '一种冒险，愿意尝试但不确定结果', effect: { D: 0, S: 0, E: 0, O: 1 } }
+    ]
+  }
+];
+
+// ---------- Personality Types (14) ----------
+// Matching: exact thresholds (>=7 high, <=4 low) or nearest-neighbor fallback
+const PERSONALITIES = [
+  {
+    id: 'fireEmperor', name: '炽焰帝皇', emoji: '🦁',
+    ideal: { D: 9, S: 9, E: 9, O: 9 },
+    rule: function(s) { return s.D >= 7 && s.S >= 7 && s.E >= 7 && s.O >= 7; },
+    tags: ['全能领袖', '高安全感', '高共情', '开放主导'],
+    desc: '你是恋爱世界里的天生领袖。内心稳定而有力量，既不畏惧独处，也不吝啬表达深情；既有掌控关系节奏的魄力，又有拥抱未知的勇气。你渴望的是全方位的深度连接，并且你完全有能力创造这样的关系。你的存在，就是一段高质量恋爱的锚点。',
+    match: '与同样高能量的全能型人格最为契合，比如青藤织者或沧海舵手。你们能在对等的位置上互相激发，既有深度又有广度。',
+    pain: '你的高全能可能让伴侣感到压力——"你什么都做得好，我在关系里还有什么价值？"偶尔展现脆弱和需要，反而能拉近你们的距离。'
+  },
+  {
+    id: 'tidePoet', name: '潮汐诗人', emoji: '🦊',
+    ideal: { D: 3, S: 9, E: 3, O: 9 },
+    rule: function(s) { return s.D <= 4 && s.S >= 7 && s.E <= 4 && s.O >= 7; },
+    tags: ['极致浪漫', '患得患失', '高敏感', '开放探索'],
+    desc: '你是爱情中最浪漫的诗人，每一段感情都像一首诗。你的共情力让你能感知到最细微的情绪波动，你的开放性让你敢于尝试所有形式的爱。但内心深处的依恋焦虑像潮水一样反复拍打——爱得越深，越怕失去。你的浪漫源于敏感，你的痛苦也源于敏感。',
+    match: '最需要的是一个稳定而温暖的磐石倾听者或暖樱医者来承接你的情绪潮汐。对方需要在你不安时不逃走，而是温柔地把锚抛给你。',
+    pain: '你会不自觉地用"制造戏剧性"来测试对方的爱。当对方没有回应你的情绪强度时，你会陷入"他是不是不够爱我"的漩涡。学会区分"爱的浓度"和"爱的持久度"。'
+  },
+  {
+    id: 'silentLighthouse', name: '静默灯塔', emoji: '🐘',
+    ideal: { D: 9, S: 3, E: 9, O: 3 },
+    rule: function(s) { return s.D >= 7 && s.S <= 4 && s.E >= 7 && s.O <= 4; },
+    tags: ['稳定可靠', '理性主导', '强势规划', '传统保守'],
+    desc: '你是关系中最可靠的坐标。内心安全感极强，从不因小事动摇；你有清晰的方向感和强大的执行力，习惯为两个人的未来掌舵。你不擅长甜言蜜语和情绪共鸣，但你用行动证明一切——你的承诺一旦给出，就像灯塔一样风雨不移。',
+    match: '最互补的是逐光翼人或潮汐诗人那样的高共情型人格。他们能帮你打开情感表达的维度，而你的稳定能给他们最需要的安全感。',
+    pain: '你容易把"解决问题"等同于"表达爱"，忽略了伴侣真正需要的是情绪上的被看见、被理解。偶尔放下行动，只是倾听和陪伴，比你做十件事更有效。'
+  },
+  {
+    id: 'loneWolf', name: '孤狼旅人', emoji: '🦅',
+    ideal: { D: 9, S: 3, E: 3, O: 9 },
+    rule: function(s) { return s.D >= 7 && s.S <= 4 && s.E <= 4 && s.O >= 7; },
+    tags: ['独立自由', '低共情', '随性洒脱', '开放探索'],
+    desc: '你是爱情里的独行侠。你不需要任何人来完整自己，独处对你来说是享受而非煎熬。你不喜欢被关系的条条框框束缚，也不擅长细腻的情感交流，但你的开放和自由精神让你成为最不粘人、最给空间的伴侣。你爱得云淡风轻，却也因此让人感觉难以靠近。',
+    match: '适合与同样独立自主的人格相处，比如青藤织者或冰霜隐者。对方需要理解并尊重你对空间的需求，而不是试图把你"拉回来"。',
+    pain: '你的伴侣可能会觉得"你不需要我"——这对很多人来说是致命的。你需要刻意地告诉对方"我选择和你在一起，不是因为我需要你，而是因为我想要你"。这是完全不同的信号。'
+  },
+  {
+    id: 'ironGuard', name: '玄铁守御', emoji: '🐉',
+    ideal: { D: 3, S: 3, E: 9, O: 3 },
+    rule: function(s) { return s.D <= 4 && s.S <= 4 && s.E >= 7 && s.O <= 4; },
+    tags: ['控制欲强', '传统守旧', '高度主导', '低安全感'],
+    desc: '你是关系中的铁腕守护者。内心有强烈的不安全感，所以你用控制来应对——掌控节奏、制定规则、划定边界，一切都必须在你的秩序之内。你很难信任他人，也不擅长表达柔软的内心，但你的忠诚和责任感是毋庸置疑的。你用铁壁守护爱情，却也可能把爱人困在了城墙之内。',
+    match: '磐石倾听者或暖樱医者的温柔包容最适合化解你的防备。你需要一个不会挑战你权威、但能用持久的温暖渗透你盔甲的人。',
+    pain: '你的控制不是源于恶意，而是源于恐惧。你需要意识到：越用力握紧沙子，流失得越快。真正的安全来自信任，而非控制。学着在安全的小事上放手，你会发现世界并没有坍塌。'
+  },
+  {
+    id: 'lightChaser', name: '逐光翼人', emoji: '🦋',
+    ideal: { D: 3, S: 9, E: 3, O: 3 },
+    rule: function(s) { return s.D <= 4 && s.S >= 7 && s.E <= 4 && s.O <= 4; },
+    tags: ['渴望被爱', '高敏感', '被动顺从', '保守内敛'],
+    desc: '你像一只围着光源飞舞的蝴蝶，渴望爱情的温度却又不敢靠得太近。你的共情力让你能深深感受到爱的美好，但内心的不安全感让你总是在关键时刻退缩。你习惯配合、避免冲突，把决定权交出去，期待对方能读懂你未曾说出口的需要。',
+    match: '最适合的是静默灯塔或沧海舵手这样的高主导型人格。他们能主动走向你，给你明确的信号和安全感，而你只需安心地靠近和信任。',
+    pain: '你最大的痛点是"不说出来"——你期待对方能猜到你想要什么，但没有人会读心术。学会用语言表达需求不是软弱，而是给对方一个爱你的具体方式。'
+  },
+  {
+    id: 'rockListener', name: '磐石倾听者', emoji: '🌳',
+    ideal: { D: 9, S: 9, E: 3, O: 3 },
+    rule: function(s) { return s.D >= 7 && s.S >= 7 && s.E <= 4 && s.O <= 4; },
+    tags: ['温柔包容', '深度共情', '被动配合', '传统稳定'],
+    desc: '你是爱情中最温暖的容器。安全感让你不焦虑、不患得患失，共情力让你成为最好的倾听者和陪伴者。你不喜欢主导关系，更享受在配合中创造和谐。你相信爱不需要轰轰烈烈，日常的陪伴和深深的理解就是最珍贵的礼物。你的存在本身就是一座避风港。',
+    match: '沧海舵手或炽焰帝皇的主动性能弥补你的被动。他们会感激你的包容和理解，而你会享受被温柔引领的感觉。也需要警惕过于自我中心的人消耗你的善意。',
+    pain: '你太擅长照顾别人的感受，以至于常常忘记了自己的需求。你需要记住：真正的包容不是无止境的退让，而是在尊重自己的前提下给予。偶尔说"我想要"不是自私。'
+  },
+  {
+    id: 'seaCaptain', name: '沧海舵手', emoji: '🌊',
+    ideal: { D: 9, S: 9, E: 9, O: 3 },
+    rule: function(s) { return s.D >= 7 && s.S >= 7 && s.E >= 7 && s.O <= 4; },
+    tags: ['强势温暖', '高安全感', '高共情', '传统主导'],
+    desc: '你是爱情中既强大又温柔的领袖。你有足够的内心安全感，同时具备深度的共情力——这让你的强大不让人畏惧，而是让人感到被保护、被理解。你习惯主导关系的方向，但你主导的方式是带着温度的。你是那种"我来安排一切，但我知道你喜欢什么"的人。',
+    match: '磐石倾听者或逐光翼人最适合你的强势温柔。他们享受被引领的感觉，而你能给他们最需要的安全感和确定性。',
+    pain: '你可能高估了"我知道什么对你好"的准确性。你的共情力虽强，但每个人都有不为人知的角落。定期问自己：我是在给对方我想要的，还是对方真正需要的？'
+  },
+  {
+    id: 'starWanderer', name: '星火漫游者', emoji: '🔥',
+    ideal: { D: 3, S: 9, E: 9, O: 9 },
+    rule: function(s) { return s.D <= 4 && s.S >= 7 && s.E >= 7 && s.O >= 7; },
+    tags: ['极端浪漫', '危险迷人', '高主导', '高开放'],
+    desc: '你是爱情中最危险的迷人角色。你的共情力让你能精准击中对方的心，你的主导力让你在关系中占据主动，你的开放性让你愿意尝试任何疯狂的浪漫——但你的不安全感像不定时炸弹，随时可能引爆。你爱得炙热而极端，让人欲罢不能却又时刻担心被灼伤。',
+    match: '静默灯塔或磐石倾听者的稳定性能中和你的不稳定性。你需要一个既接得住你的热烈、又不被你情绪漩涡卷走的人。',
+    pain: '你的魅力在于极端，但你的痛苦也在于极端。你容易在"狂热迷恋"和"彻底否定"之间来回摆荡。学会在灰色地带停留，不是所有人都必须完美或一文不值。'
+  },
+  {
+    id: 'glacierSage', name: '冰川智士', emoji: '⛰️',
+    ideal: { D: 9, S: 3, E: 3, O: 3 },
+    rule: function(s) { return s.D >= 7 && s.S <= 4 && s.E <= 4 && s.O <= 4; },
+    tags: ['理性绝缘', '高度独立', '被动随性', '保守稳定'],
+    desc: '你是爱情世界里的冰山——沉静、稳固、理智到近乎绝缘。你不需要热烈的情绪交流，也不追求浪漫的仪式感。你有极强的内心稳定性，独处是你最舒适的状态。你不主动推进关系，也不刻意迎合对方。你的爱不是火焰，而是一片恒温的湖水——不烫不冷，始终如一。',
+    match: '逐光翼人或潮汐诗人的情感丰富度能为你注入一些温度。但你需要找到一个理解并尊重你"低情感表达"本质的人，而不是试图把你改造成一个浪漫主义者。',
+    pain: '你的伴侣可能会感到孤独——"我和你在一起，为什么还是觉得是一个人？"关系的本质是连接，即使你不擅长，也需要刻意制造一些连接时刻。不需要轰轰烈烈，哪怕每天十分钟的深度对话。'
+  },
+  {
+    id: 'sandstormTactician', name: '狂沙策士', emoji: '🌪️',
+    ideal: { D: 3, S: 3, E: 9, O: 9 },
+    rule: function(s) { return s.D <= 4 && s.S <= 4 && s.E >= 7 && s.O >= 7; },
+    tags: ['操控倾向', '低共情', '强势开放', '不择手段'],
+    desc: '你是关系中的战略家。你清楚自己要什么，也有足够的手段去达成。你的主导力让你在关系中天然处于上位，你的开放性让你不拘泥于任何规则——但你的低安全感和低共情力，有时会让你把关系当成一场需要赢的游戏。你聪明而有魅力，但需要警惕自己是否在不自觉地操控而非连接。',
+    match: '冰川智士或孤狼旅人的独立性能避免被你过度影响。你需要的是一个能保持自我边界、不被你轻易操控的伴侣，而不是一个会完全臣服于你魅力的人。',
+    pain: '你最大的风险是在关系中失去了"真诚"——当你习惯用策略而非真心去经营关系时，你赢了控制权，却输了连接感。真正的亲密关系不是征服，而是两颗心的相遇。'
+  },
+  {
+    id: 'warmCherryHealer', name: '暖樱医者', emoji: '🌸',
+    ideal: { D: 9, S: 9, E: 3, O: 9 },
+    rule: function(s) { return s.D >= 7 && s.S >= 7 && s.E <= 4 && s.O >= 7; },
+    tags: ['包容治愈', '高安全感', '高共情', '开放接纳'],
+    desc: '你是爱情中的治愈者。你拥有最温暖的人格组合：内心稳定不缺全感，共情力让你能深深理解他人，开放性让你包容一切不同——而你的不强势让所有人都能在你身边做自己。你是那种"无论你是什么样子，我都能接纳你"的存在。你的爱是药，能治愈过往的创伤。',
+    match: '你可以和几乎所有类型兼容，但最契合的是那些内心有伤、需要被治愈的人——比如逐光翼人或潮汐诗人。对方的成长会给你最大的满足感。',
+    pain: '你容易成为"情感救助站"——不断被需要你的人吸引，然后在治愈对方的过程中消耗自己。你需要意识到：不是所有人都需要被你治愈，有些人只是需要你陪伴，而非拯救。'
+  },
+  {
+    id: 'frostRecluse', name: '冰霜隐者', emoji: '🧊',
+    ideal: { D: 3, S: 3, E: 3, O: 9 },
+    rule: function(s) { return s.D <= 4 && s.S <= 4 && s.E <= 4 && s.O >= 7; },
+    tags: ['边缘游离', '低安全感', '低共情', '高度开放'],
+    desc: '你是关系边缘的旁观者。你对世界充满好奇，对各种关系形式保持开放——但你从未真正全身心投入任何一段。你的低安全感让你不敢靠近，你的低共情让你不太在意，你的被动让你习惯等待。你像一个站在舞池边缘的人，观察着所有人的舞步，却迟迟不下场。',
+    match: '孤狼旅人或暖樱医者最适合你。前者理解你对空间的需求，后者能用不加评判的温暖让你感到安全。',
+    pain: '你可能从未体验过"真正被爱"的感觉——因为真正的爱需要脆弱，需要卸下所有防御。你对自由的热爱，有时只是害怕被束缚的合理化借口。问自己：你是在选择自由，还是在逃避亲密？'
+  },
+  {
+    id: 'ivyWeaver', name: '青藤织者', emoji: '🌿',
+    ideal: { D: 9, S: 3, E: 9, O: 9 },
+    rule: function(s) { return s.D >= 7 && s.S <= 4 && s.E >= 7 && s.O >= 7; },
+    tags: ['理性规划', '高安全感', '强势开放', '人生合伙人'],
+    desc: '你是关系中最理性的人生合伙人。你有清晰的自我认知和方向感，不依赖他人来获得安全感。你擅长规划、习惯主导，同时对新事物保持开放。你不太擅长情感上的细腻共鸣，但你会用结构和行动来经营关系——你的爱是"我把你写进了我的人生规划里"。',
+    match: '炽焰帝皇或潮汐诗人能为你注入更多情感色彩。前者是旗鼓相当的伙伴，后者能让你感受到理性之外的浪漫维度。',
+    pain: '你容易把关系当成项目来管理，用KPI的思维去衡量"恋爱进度"。你需要记住：关系的核心不是效率，而是两个不完美的人一起浪费时间的美好。偶尔放下计划，只是"在一起"，就已足够。'
+  }
+];
+
+// ---------- State ----------
+const state = {
+  nickname: '',
+  answers: new Array(15).fill(null),
+  currentQuestion: 0,
+  scores: null, // { D, S, E, O }
+  personality: null
+};
+
+// ---------- DOM Refs ----------
+const $ = function(sel) { return document.querySelector(sel); };
+
+const screenLanding = $('#screen-landing');
+const screenQuestions = $('#screen-questions');
+const screenResults = $('#screen-results');
+const progressWrap = $('#progressWrap');
+const progressBar = $('#progressBar');
+const nicknameInput = $('#nicknameInput');
+const btnStart = $('#btnStart');
+const questionWrap = $('#questionWrap');
+const resultGrid = $('#resultGrid');
+const adminOverlay = $('#adminOverlay');
+const adminPanel = $('#adminPanel');
+const toastContainer = $('#toastContainer');
+
+// ---------- Screen Navigation ----------
+function showScreen(screen) {
+  [screenLanding, screenQuestions, screenResults].forEach(function(s) { s.classList.remove('active'); });
+  screen.classList.add('active');
+}
+
+// ---------- Toast ----------
+function showToast(msg) {
+  var el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  toastContainer.appendChild(el);
+  setTimeout(function() {
+    el.classList.add('out');
+    el.addEventListener('animationend', function() { el.remove(); });
+  }, 2200);
+}
+
+// ---------- Progress Bar ----------
+function updateProgress() {
+  progressBar.style.width = ((state.currentQuestion) / QUESTIONS.length * 100) + '%';
+}
+
+// ---------- Landing ----------
+nicknameInput.addEventListener('input', function() {
+  state.nickname = nicknameInput.value.trim();
+  btnStart.disabled = !state.nickname;
+});
+
+nicknameInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && state.nickname) startTest();
+});
+
+btnStart.addEventListener('click', startTest);
+
+function startTest() {
+  if (!state.nickname) return;
+  state.answers = new Array(15).fill(null);
+  state.currentQuestion = 0;
+  progressWrap.style.display = 'block';
+  updateProgress();
+  showScreen(screenQuestions);
+  renderQuestion(0);
+}
+
+// ---------- Render Question ----------
+function renderQuestion(index) {
+  state.currentQuestion = index;
+  updateProgress();
+  var q = QUESTIONS[index];
+
+  var html = '<div class="question-fade-enter">';
+  html += '<div class="question-header">';
+  html += '<span class="question-counter">Q' + (index + 1) + '</span>';
+  html += '<span>/ ' + QUESTIONS.length + '</span>';
+  html += '</div>';
+  html += '<h2 class="question-text">' + q.text + '</h2>';
+  html += '<div class="options-grid">';
+
+  q.options.forEach(function(opt, optIdx) {
+    var selected = state.answers[index] === optIdx ? ' selected' : '';
+    html += '<button class="option-btn' + selected + '" data-opt="' + optIdx + '">';
+    html += '<span class="option-label">' + opt.label + '</span>';
+    html += opt.text;
+    html += '</button>';
+  });
+
+  html += '</div></div>';
+  questionWrap.innerHTML = html;
+
+  questionWrap.querySelectorAll('.option-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      selectOption(index, parseInt(this.dataset.opt));
+    });
+  });
+}
+
+function selectOption(questionIndex, optIdx) {
+  state.answers[questionIndex] = optIdx;
+
+  questionWrap.querySelectorAll('.option-btn').forEach(function(btn, i) {
+    btn.classList.toggle('selected', i === optIdx);
+  });
+
+  setTimeout(function() {
+    if (questionIndex < QUESTIONS.length - 1) {
+      renderQuestion(questionIndex + 1);
+    } else {
+      finishTest();
+    }
+  }, 400);
+}
+
+// ---------- Calculate Scores ----------
+function calculateScores() {
+  // Start at 5 for each dimension
+  var D = 5, S = 5, E = 5, O = 5;
+
+  state.answers.forEach(function(optIdx, qIdx) {
+    if (optIdx === null) return;
+    var eff = QUESTIONS[qIdx].options[optIdx].effect;
+    D += eff.D || 0;
+    S += eff.S || 0;
+    E += eff.E || 0;
+    O += eff.O || 0;
+  });
+
+  // Clamp to 1-10
+  D = Math.max(1, Math.min(10, D));
+  S = Math.max(1, Math.min(10, S));
+  E = Math.max(1, Math.min(10, E));
+  O = Math.max(1, Math.min(10, O));
+
+  return { D: D, S: S, E: E, O: O };
+}
+
+// ---------- Classify Personality ----------
+function classifyPersonality(scores) {
+  // Try exact rule match first
+  for (var i = 0; i < PERSONALITIES.length; i++) {
+    if (PERSONALITIES[i].rule(scores)) {
+      return i;
+    }
+  }
+
+  // Fallback: nearest neighbor by Euclidean distance
+  var bestIdx = 0;
+  var bestDist = Infinity;
+
+  for (var j = 0; j < PERSONALITIES.length; j++) {
+    var ideal = PERSONALITIES[j].ideal;
+    var dD = scores.D - ideal.D;
+    var dS = scores.S - ideal.S;
+    var dE = scores.E - ideal.E;
+    var dO = scores.O - ideal.O;
+    var dist = dD * dD + dS * dS + dE * dE + dO * dO;
+
+    if (dist < bestDist) {
+      bestDist = dist;
+      bestIdx = j;
+    }
+  }
+
+  return bestIdx;
+}
+
+// ---------- Finish Test ----------
+function finishTest() {
+  progressWrap.style.display = 'none';
+  state.scores = calculateScores();
+  state.personality = classifyPersonality(state.scores);
+  saveResult();
+  showScreen(screenResults);
+  renderResults();
+}
+
+// ---------- Render Results ----------
+function renderResults() {
+  var p = PERSONALITIES[state.personality];
+  var s = state.scores;
+  var code = 'D' + s.D + '-S' + s.S + '-E' + s.E + '-O' + s.O;
+
+  var html = '';
+
+  // Left: Personality card
+  html += '<div class="result-card">';
+  html += '<div class="result-type-emoji">' + p.emoji + '</div>';
+  html += '<div class="result-type-name">' + p.name + '</div>';
+  html += '<div class="result-code">' + code + '</div>';
+  html += '<p class="result-type-desc">' + p.desc + '</p>';
+  html += '<div class="result-tags">';
+  p.tags.forEach(function(t) { html += '<span class="result-tag">' + t + '</span>'; });
+  html += '</div>';
+
+  html += '<div class="result-section">';
+  html += '<div class="result-section-title">💝 匹配建议</div>';
+  html += '<div class="result-section-body">' + p.match + '</div>';
+  html += '</div>';
+
+  html += '<div class="result-section">';
+  html += '<div class="result-section-title">⚠️ 恋爱痛点</div>';
+  html += '<div class="result-section-body pain">' + p.pain + '</div>';
+  html += '</div>';
+  html += '</div>';
+
+  // Right: Radar chart
+  html += '<div class="radar-card">';
+  html += '<div class="radar-title">四维雷达图</div>';
+  html += '<canvas id="radarCanvas" width="320" height="320"></canvas>';
+  html += '<div class="radar-legend">';
+  html += '<span><span class="legend-dot D"></span> 依恋安全感 D ' + s.D + '</span>';
+  html += '<span><span class="legend-dot S"></span> 情绪共振力 S ' + s.S + '</span>';
+  html += '<span><span class="legend-dot E"></span> 关系决策力 E ' + s.E + '</span>';
+  html += '<span><span class="legend-dot O"></span> 开放性 O ' + s.O + '</span>';
+  html += '</div>';
+  html += '</div>';
+
+  resultGrid.innerHTML = html;
+
+  // Actions row
+  var actionsRow = document.createElement('div');
+  actionsRow.className = 'result-actions';
+  actionsRow.style.gridColumn = '1 / -1';
+  actionsRow.innerHTML = '<button class="btn btn-primary" id="btnCopy">📋 复制结果</button><button class="btn btn-ghost" id="btnRetake">🔄 重新测试</button>';
+  resultGrid.appendChild(actionsRow);
+
+  document.getElementById('btnCopy').addEventListener('click', copyResult);
+  document.getElementById('btnRetake').addEventListener('click', resetTest);
+
+  setTimeout(function() { drawRadar(s); }, 150);
+}
+
+// ---------- 4-Axis Radar Chart (Canvas) ----------
+function drawRadar(scores) {
+  var canvas = document.getElementById('radarCanvas');
+  if (!canvas) return;
+
+  var dpr = window.devicePixelRatio || 1;
+  var rect = canvas.getBoundingClientRect();
+  var size = Math.min(rect.width, rect.height);
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  var W = size;
+  var H = size;
+  var cx = W / 2;
+  var cy = H / 2;
+  var R = Math.min(cx, cy) - 45;
+
+  // 4 axes: top (D), right (S), bottom (E), left (O)
+  var angles = [
+    -Math.PI / 2,        // D - 12 o'clock
+    0,                   // S - 3 o'clock
+    Math.PI / 2,         // E - 6 o'clock
+    Math.PI              // O - 9 o'clock
+  ];
+  var labels = ['D 安全感', 'S 共振力', 'E 决策力', 'O 开放性'];
+  var values = [scores.D, scores.S, scores.E, scores.O];
+  var colors = ['#f59e0b', '#ef4444', '#8b5cf6', '#10b981'];
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw concentric squares (levels 2,4,6,8,10)
+  for (var level = 2; level <= 10; level += 2) {
+    var r = (level / 10) * R;
+    ctx.beginPath();
+    for (var i = 0; i < 4; i++) {
+      var x = cx + r * Math.cos(angles[i]);
+      var y = cy + r * Math.sin(angles[i]);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Level label
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText(level, cx, cy - r - 8);
+  }
+
+  // Draw axes and labels
+  angles.forEach(function(angle, i) {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + R * Math.cos(angle), cy + R * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Label
+    var lx = cx + (R + 22) * Math.cos(angle);
+    var ly = cy + (R + 22) * Math.sin(angle);
+    ctx.fillStyle = colors[i];
+    ctx.font = '12px system-ui';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(labels[i], lx, ly);
+
+    // Value
+    var vx = cx + (R + 38) * Math.cos(angle);
+    var vy = cy + (R + 38) * Math.sin(angle);
+    ctx.fillStyle = '#faf5f0';
+    ctx.font = '600 12px Outfit, system-ui';
+    ctx.fillText(values[i], vx, vy);
+  });
+
+  // Draw data polygon
+  ctx.beginPath();
+  for (var j = 0; j < 4; j++) {
+    var dr = (values[j] / 10) * R;
+    var dx = cx + dr * Math.cos(angles[j]);
+    var dy = cy + dr * Math.sin(angles[j]);
+    if (j === 0) ctx.moveTo(dx, dy);
+    else ctx.lineTo(dx, dy);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(232,120,74,0.12)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(232,120,74,0.6)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Data points
+  for (var k = 0; k < 4; k++) {
+    var pr = (values[k] / 10) * R;
+    var px = cx + pr * Math.cos(angles[k]);
+    var py = cy + pr * Math.sin(angles[k]);
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fillStyle = colors[k];
+    ctx.fill();
+    ctx.strokeStyle = '#faf5f0';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+}
+
+// ---------- Copy Result ----------
+function copyResult() {
+  var p = PERSONALITIES[state.personality];
+  var s = state.scores;
+  var code = 'D' + s.D + '-S' + s.S + '-E' + s.E + '-O' + s.O;
+  var text = '【恋爱人格代码】我的测试结果\n\n' +
+    '🆔 人格类型：' + p.emoji + ' ' + p.name + '\n' +
+    '🧬 四维代码：' + code + '\n' +
+    '📊 维度得分：依恋安全感 D' + s.D + ' | 情绪共振力 S' + s.S + ' | 关系决策力 E' + s.E + ' | 开放性 O' + s.O + '\n' +
+    '🏷️ 核心特质：' + p.tags.join(' / ') + '\n\n' +
+    '📖 ' + p.desc + '\n\n' +
+    '💝 匹配建议：' + p.match + '\n\n' +
+    '⚠️ 恋爱痛点：' + p.pain + '\n\n' +
+    '-- 你也来测测？';
+
+  navigator.clipboard.writeText(text).then(function() {
+    showToast('✅ 结果已复制，分享给朋友吧');
+  }).catch(function() {
+    showToast('⚠️ 复制失败，请手动截图保存');
+  });
+}
+
+// ---------- Reset ----------
+function resetTest() {
+  state.answers = new Array(15).fill(null);
+  state.currentQuestion = 0;
+  state.scores = null;
+  state.personality = null;
+  state.nickname = '';
+  nicknameInput.value = '';
+  btnStart.disabled = true;
+  progressWrap.style.display = 'none';
+  progressBar.style.width = '0%';
+  showScreen(screenLanding);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---------- localStorage ----------
+var STORAGE_KEY = 'love_personality_4d_results';
+
+function saveResult() {
+  // 1. 本地备份（localStorage）
+  var records = getRecords();
+  records.push({
+    time: new Date().toISOString(),
+    nickname: state.nickname,
+    D: state.scores.D,
+    S: state.scores.S,
+    E: state.scores.E,
+    O: state.scores.O,
+    code: 'D' + state.scores.D + '-S' + state.scores.S + '-E' + state.scores.E + '-O' + state.scores.O,
+    personality: PERSONALITIES[state.personality].name
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+
+  // 2. 提交到云端（Supabase）
+  submitToCloud();
+}
+
+function submitToCloud() {
+  var p = PERSONALITIES[state.personality];
+  var code = 'D' + state.scores.D + '-S' + state.scores.S + '-E' + state.scores.E + '-O' + state.scores.O;
+
+  // 构建每道题的详细答题数据
+  var answers = QUESTIONS.map(function(q, idx) {
+    var optIdx = state.answers[idx];
+    var opt = q.options[optIdx];
+    return {
+      q: q.id,
+      dim: q.dim,
+      text: q.text,
+      opt: opt.label,
+      optText: opt.text
+    };
+  });
+
+  fetch('/api/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nickname: state.nickname,
+      scores: state.scores,
+      code: code,
+      personality: { id: p.id, name: p.name, emoji: p.emoji },
+      answers: answers
+    })
+  }).then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.success) {
+        console.log('✅ 结果已同步到云端');
+      } else {
+        console.warn('⚠️ 云端同步失败:', data.error);
+      }
+    })
+    .catch(function(err) {
+      console.warn('⚠️ 云端请求失败:', err);
+    });
+}
+
+function getRecords() {
+  try {
+    var data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function clearRecords() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+// ---------- Admin Panel ----------
+$('#btnAdminTrigger').addEventListener('click', function() {
+  renderAdminPanel();
+  adminOverlay.classList.add('open');
+});
+
+adminOverlay.addEventListener('click', function(e) {
+  if (e.target === adminOverlay) {
+    adminOverlay.classList.remove('open');
+  }
+});
+
+function renderAdminPanel() {
+  adminPanel.innerHTML = '<button class="admin-close" id="btnAdminClose">&times;</button>' +
+    '<h3>🔐 管理后台</h3>' +
+    '<div class="input-group" style="margin-top:12px">' +
+    '<input type="password" class="nickname-input" id="adminPassword" placeholder="请输入管理密码" autocomplete="off">' +
+    '<button class="btn btn-primary btn-small" id="btnAdminLogin">验证进入</button>' +
+    '</div>' +
+    '<p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px">密码在 Vercel 环境变量 <code>ADMIN_PASSWORD</code> 中设置</p>';
+
+  $('#btnAdminClose').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
+
+  $('#btnAdminLogin').addEventListener('click', function() {
+    fetchDashboard();
+  });
+
+  $('#adminPassword').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') fetchDashboard();
+  });
+}
+
+var cloudRecords = [];
+
+function fetchDashboard() {
+  var password = $('#adminPassword').value;
+  if (!password) { showToast('请输入密码'); return; }
+
+  adminPanel.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div><p style="margin-top:12px;color:var(--text-muted)">正在从云端加载...</p></div>';
+
+  fetch('/api/results?password=' + encodeURIComponent(password))
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.error) {
+        adminPanel.innerHTML = '<button class="admin-close" id="btnAdminClose2">&times;</button>' +
+          '<h3>🔐 管理后台</h3>' +
+          '<div style="text-align:center;padding:20px;color:#e06060">❌ ' + data.error + '</div>' +
+          '<button class="btn btn-ghost btn-small" id="btnRetryLogin" style="margin:0 auto;display:block">↩️ 返回</button>';
+        $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
+        $('#btnRetryLogin').addEventListener('click', renderAdminPanel);
+        return;
+      }
+      cloudRecords = data.results || [];
+      renderAdminDashboard();
+    })
+    .catch(function(err) {
+      adminPanel.innerHTML = '<button class="admin-close" id="btnAdminClose2">&times;</button>' +
+        '<h3>🔐 管理后台</h3>' +
+        '<div style="text-align:center;padding:20px;color:#e06060">❌ 无法连接到服务器，请检查部署状态</div>' +
+        '<button class="btn btn-ghost btn-small" id="btnRetryLogin" style="margin:0 auto;display:block">↩️ 返回</button>';
+      $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
+      $('#btnRetryLogin').addEventListener('click', renderAdminPanel);
+    });
+}
+
+function renderAdminDashboard() {
+  var records = cloudRecords;
+  var html = '<button class="admin-close" id="btnAdminClose2">&times;</button>';
+  html += '<h3>📊 测试记录管理</h3>';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+  html += '<span style="font-size:0.8rem;color:var(--text-muted)">共 <strong>' + records.length + '</strong> 条记录（云端实时数据）</span>';
+  html += '<button class="btn btn-ghost btn-small" id="btnRefreshData">🔄 刷新</button>';
+  html += '</div>';
+
+  if (records.length === 0) {
+    html += '<div class="admin-empty">暂无云端测试记录<br><small style="color:var(--text-muted)">有人提交测试后，数据会自动出现在这里</small></div>';
+  } else {
+    html += '<div style="overflow-x:auto"><table class="admin-table"><thead><tr>';
+    html += '<th>#</th><th>时间</th><th>昵称</th><th>人格代码</th><th>D安全感</th><th>S共振力</th><th>E决策力</th><th>O开放性</th><th>人格类型</th><th>详情</th>';
+    html += '</tr></thead><tbody>';
+
+    records.forEach(function(r, i) {
+      var d = new Date(r.created_at);
+      var timeStr = d.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+      html += '<tr>';
+      html += '<td>' + (i + 1) + '</td>';
+      html += '<td>' + timeStr + '</td>';
+      html += '<td>' + escHtml(r.nickname) + '</td>';
+      html += '<td style="font-family:monospace;font-size:0.75rem">' + r.code + '</td>';
+      html += '<td>' + (r.scores.D || '-') + '</td>';
+      html += '<td>' + (r.scores.S || '-') + '</td>';
+      html += '<td>' + (r.scores.E || '-') + '</td>';
+      html += '<td>' + (r.scores.O || '-') + '</td>';
+      html += '<td>' + (r.personality ? r.personality.emoji + ' ' + r.personality.name : '-') + '</td>';
+      html += '<td><button class="btn btn-ghost btn-small btn-detail" data-idx="' + i + '">📋 查看答题</button></td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+  }
+
+  html += '<div class="admin-actions">';
+  html += '<button class="btn btn-primary btn-small" id="btnExportCSV">📥 导出 CSV</button>';
+  html += '<button class="btn btn-ghost btn-small" id="btnBackToLogin">↩️ 切换账号</button>';
+  html += '</div>';
+
+  html += '<div style="margin-top:20px;padding:12px;background:rgba(255,255,255,0.02);border-radius:10px;font-size:0.75rem;color:var(--text-muted)">';
+  html += '💡 <strong>数据来源：</strong>Supabase 云端数据库。所有用户的测试结果实时同步，不会因清除浏览器缓存而丢失。';
+  html += '</div>';
+
+  // 展开答题详情的弹层容器
+  html += '<div id="detailOverlay" class="detail-overlay" style="display:none"><div id="detailContent" class="detail-content"></div></div>';
+
+  adminPanel.innerHTML = html;
+
+  $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
+  $('#btnExportCSV').addEventListener('click', exportCSV);
+  $('#btnRefreshData').addEventListener('click', function() {
+    var password = $('#adminPassword').value;
+    if (password) {
+      adminPanel.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div></div>';
+      fetch('/api/results?password=' + encodeURIComponent(password))
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          cloudRecords = data.results || [];
+          renderAdminDashboard();
+        });
+    }
+  });
+  $('#btnBackToLogin').addEventListener('click', function() {
+    cloudRecords = [];
+    renderAdminPanel();
+  });
+
+  // 绑定答题详情按钮
+  adminPanel.querySelectorAll('.btn-detail').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var idx = parseInt(this.dataset.idx);
+      showAnswerDetail(idx);
+    });
+  });
+
+  // 关闭详情弹层
+  var detailOverlay = document.getElementById('detailOverlay');
+  if (detailOverlay) {
+    detailOverlay.addEventListener('click', function() {
+      detailOverlay.style.display = 'none';
+    });
+  }
+}
+
+function escHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function showAnswerDetail(idx) {
+  var r = cloudRecords[idx];
+  if (!r || !r.answers) return;
+
+  var html = '<div class="detail-card" onclick="event.stopPropagation()">';
+  html += '<button class="admin-close" onclick="document.getElementById('detailOverlay').style.display='none'">&times;</button>';
+  html += '<h3>📋 ' + escHtml(r.nickname) + ' 的答题详情</h3>';
+  html += '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">';
+  html += '人格类型：' + (r.personality ? r.personality.emoji + ' ' + r.personality.name : '-') + ' &nbsp;|&nbsp; ';
+  html += '代码：<code>' + r.code + '</code></p>';
+
+  html += '<div style="max-height:60vh;overflow-y:auto">';
+  r.answers.forEach(function(a, i) {
+    html += '<div style="margin-bottom:14px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid var(--accent)">';
+    html += '<div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px">Q' + a.q + ' · 维度 ' + a.dim + '</div>';
+    html += '<div style="font-size:0.9rem;margin-bottom:6px;font-weight:500">' + escHtml(a.text) + '</div>';
+    html += '<div style="font-size:0.85rem;color:var(--accent)"><strong>选 ' + a.opt + '：</strong>' + escHtml(a.optText) + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  var overlay = document.getElementById('detailOverlay');
+  var contentEl = document.getElementById('detailContent');
+  contentEl.innerHTML = html;
+  overlay.style.display = 'flex';
+}
+
+function exportCSV() {
+  var records = cloudRecords;
+  if (records.length === 0) {
+    showToast('⚠️ 没有可导出的数据');
+    return;
+  }
+
+  var bom = '﻿';
+  var header = '序号,时间,昵称,人格代码,D依恋安全感,S情绪共振力,E关系决策力,O开放性,人格类型\n';
+  var rows = records.map(function(r, i) {
+    var d = new Date(r.created_at);
+    var timeStr = d.toLocaleString('zh-CN');
+    return [
+      i + 1, timeStr, r.nickname, r.code,
+      r.scores.D, r.scores.S, r.scores.E, r.scores.O,
+      r.personality ? r.personality.name : '-'
+    ].map(function(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
+  }).join('\n');
+
+  var blob = new Blob([bom + header + rows], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '恋爱人格代码_测试记录_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ CSV 文件已下载（云端数据）');
+}
+
+// ---------- Keyboard Shortcuts ----------
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') adminOverlay.classList.remove('open');
+});
+
+// ---------- Init ----------
+console.log('%c💝 恋爱人格代码 %cv2.0 - 四维模型版',
+  'font-size:1.2em;color:#e8784a', 'color:#a89888');
+console.log('%c基于恋爱认知-行为四维模型 | 15道情景题 | 14种人格类型',
+  'color:#6b5d53;font-size:0.85em');
+console.log('%cDesigned with Taste Skill v2',
+  'color:#a89888;font-size:0.8em;font-style:italic');
+
+})();
+// vim: ts=2 sw=2
+</script>
+
+</body>
+</html>
