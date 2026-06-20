@@ -40,8 +40,7 @@ module.exports = async function handler(req, res) {
   if (!scores || !scores.D || !scores.S || !scores.E || !scores.O) {
     return res.status(400).json({ error: '缺少得分数据' });
   }
-  if (!code) return res.status(400).json({ error: '缺少人格代码' });
-  if (!personality || !personality.id || !personality.name) {
+  if (!personality || !personality.name) {
     return res.status(400).json({ error: '缺少人格类型' });
   }
   if (!answers || !Array.isArray(answers) || answers.length !== 15) {
@@ -56,12 +55,10 @@ module.exports = async function handler(req, res) {
     const url = `${process.env.SUPABASE_URL}/rest/v1/test_results`;
     const body = JSON.stringify({
       nickname: nickname.trim(),
+      personality_type: personality.name,
       scores,
-      code,
-      personality,
       answers,
-      user_agent: req.headers['user-agent'] || null,
-      ip_hash: ipHash
+      ip: ipHash
     });
 
     const resp = await fetch(url, {
