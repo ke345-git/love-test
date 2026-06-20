@@ -1511,7 +1511,7 @@ function showAnswerDetail(idx) {
   if (!r || !r.answers) return;
 
   var html = '<div class="detail-card" onclick="event.stopPropagation()">';
-  html += '<button class="admin-close" onclick="document.getElementById('detailOverlay').style.display='none'">&times;</button>';
+  html += "<button class=\"admin-close\" onclick=\"document.getElementById('detailOverlay').style.display='none'\">&times;</button>";
   html += '<h3>📋 ' + escHtml(r.nickname) + ' 的答题详情</h3>';
   html += '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">';
   html += '人格类型：' + (r.personality ? r.personality.emoji + ' ' + r.personality.name : '-') + ' &nbsp;|&nbsp; ';
