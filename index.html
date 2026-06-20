@@ -558,7 +558,7 @@ body {
 #screen-psychologist,
 #screen-chat,
 #screen-gallery { display: none; flex: 1; width: 100%; }
-#screen-mode-select { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; width: 100%; }
+#screen-mode-select { display: flex; flex-direction: column; align-items: center; padding-top: 6vh; flex: 1; width: 100%; }
 #screen-psychologist.active,
 #screen-chat.active,
 #screen-gallery.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -676,12 +676,12 @@ body {
 }
 
 /* Hero in mode-select */
-.mode-hero { text-align: center; padding: 36px 0 24px; }
-.mode-hero-orb { font-size: 3rem; margin-bottom: 12px; animation: orbFloat 3s ease-in-out infinite; }
-.mode-hero-title { font-family: var(--font-display); font-size: clamp(2rem,5vw,2.8rem); font-weight: 600; line-height: 1.1; color: var(--text); }
+.mode-hero { text-align: center; padding: 16px 0 10px; }
+.mode-hero-orb { font-size: 2.2rem; margin-bottom: 6px; animation: orbFloat 3s ease-in-out infinite; }
+.mode-hero-title { font-family: var(--font-display); font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 600; line-height: 1.1; color: var(--text); }
 .mode-hero-title span { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
-.mode-hero-desc { font-size: 0.9rem; color: var(--text-dim); margin-top: 8px; }
-.mode-nickname-wrap { display: flex; justify-content: center; margin-top: 20px; }
+.mode-hero-desc { font-size: 0.85rem; color: var(--text-dim); margin-top: 4px; }
+.mode-nickname-wrap { display: flex; justify-content: center; margin-top: 12px; }
 .mode-nickname-wrap .nickname-input { max-width: 280px; text-align: center; }
 </style>
 </head>
@@ -736,7 +736,7 @@ body {
 <!-- Admin Overlay -->
 
   <!-- Mode Select -->
-  <section class="screen active" id="screen-mode-select" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+  <section class="screen active" id="screen-mode-select">
     <div class="mode-hero">
       <div class="mode-hero-orb">💝</div>
       <h1 class="mode-hero-title">探索<span>你的</span>恋爱人格</h1>
