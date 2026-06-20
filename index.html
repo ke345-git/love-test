@@ -2016,32 +2016,42 @@ function showChatError(msg) {
 }
 
 // ========== TTS (MiMo via /api/tts) ==========
-var ttsAudio = null;
-
 function playTTS(text) {
-  if (ttsAudio) { ttsAudio.pause(); ttsAudio = null; }
+  // Use browser built-in SpeechSynthesis (free, no API needed, supports Chinese)
+  if (!window.speechSynthesis) { showToast('你的浏览器不支持语音'); return; }
 
-  var voice = currentPersona ? currentPersona.id : 'nuwa';
-  var voiceMap = { nuwa: 'gentle_female', jung: 'deep_male', fromm: 'warm_male', satir: 'warm_female' };
+  window.speechSynthesis.cancel(); // Stop any current speech
 
-  fetch('/api/tts', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: text, voice: voiceMap[voice] || 'gentle_female' })
-  })
-  .then(function(r) {
-    if (r.headers.get('content-type').includes('audio')) {
-      return r.blob().then(function(blob) {
-        var url = URL.createObjectURL(blob);
-        ttsAudio = new Audio(url);
-        ttsAudio.play();
-      });
-    }
-    return r.json().then(function(data) {
-      if (data.fallback) { showToast('语音功能暂不可用'); }
-    });
-  })
-  .catch(function() { /* silently fail for TTS */ });
+  var utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'zh-CN';
+  utterance.rate = 0.95;  // Slightly slower for warmth
+
+  // Try to match voice to persona
+  var voices = window.speechSynthesis.getVoices();
+  var personaVoice = currentPersona ? currentPersona.id : 'nuwa';
+
+  // Preference: find a good Chinese female/male voice
+  var preferred = [];
+  if (personaVoice === 'nuwa' || personaVoice === 'satir') {
+    preferred = ['Tingting', 'Yaoyao', 'Microsoft Kangkang', 'female'];
+  } else {
+    preferred = ['Yunyang', 'Microsoft Yaoyao', 'male'];
+  }
+
+  for (var i = 0; i < preferred.length; i++) {
+    var found = voices.find(function(v) { return v.name.indexOf(preferred[i]) >= 0 || (preferred[i] === 'female' && v.name.toLowerCase().includes('female')) || (preferred[i] === 'male' && v.name.toLowerCase().includes('male')); });
+    if (found) { utterance.voice = found; break; }
+  }
+
+  // Fallback: any Chinese voice
+  if (!utterance.voice) {
+    var zhVoice = voices.find(function(v) { return v.lang.startsWith('zh'); });
+    if (zhVoice) utterance.voice = zhVoice;
+  }
+
+  window.speechSynthesis.speak(utterance);
+
+  // TTS button animation handled by caller (auto-stops after ~3s via CSS)
 }
 
 // ========== RANDOM QUESTIONS (AI Generated) ==========
