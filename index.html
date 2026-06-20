@@ -696,7 +696,7 @@ body {
   </div>
 
   <!-- Landing -->
-  <section class="screen active" id="screen-landing">
+  <section class="screen" id="screen-landing" style="display:none">
     <div class="landing-grid">
       <div class="landing-content">
         <p class="landing-eyebrow">Love Personality Code</p>
@@ -737,10 +737,14 @@ body {
 <!-- Admin Overlay -->
 
   <!-- Mode Select -->
-  <section class="screen" id="screen-mode-select">
-    <div class="screen-header">
-      <h2>选择你的探索方式</h2>
-      <p>四种路径，深入了解你的恋爱人格</p>
+  <section class="screen active" id="screen-mode-select">
+    <div class="mode-hero">
+      <div class="mode-hero-orb">💝</div>
+      <h1 class="mode-hero-title">探索<span>你的</span>恋爱人格</h1>
+      <p class="mode-hero-desc">基于四维认知行为模型，用AI读懂你的关系模式</p>
+      <div class="mode-nickname-wrap">
+        <input type="text" class="nickname-input" id="nicknameInput2" placeholder="输入你的昵称" autocomplete="off">
+      </div>
     </div>
     <div class="mode-grid">
       <div class="mode-card" data-mode="standard">
@@ -1177,6 +1181,16 @@ nicknameInput.addEventListener('input', function() {
 nicknameInput.addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && state.nickname) showScreenExt(screenModeSelect);
 });
+
+// Hero nickname input sync
+var nicknameInput2 = document.getElementById('nicknameInput2');
+if (nicknameInput2) {
+  nicknameInput2.addEventListener('input', function() {
+    state.nickname = this.value.trim();
+    nicknameInput.value = state.nickname;
+    btnStart.disabled = !state.nickname;
+  });
+}
 
 btnStart.addEventListener('click', startTest);
 
