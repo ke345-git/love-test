@@ -116,6 +116,8 @@ export async function onRequest(context) {
       });
     }
 
+    // Raw mode: skip psychologist persona, pass messages directly
+    const isRaw = persona_id === 'raw';
     const persona = PERSONAS[persona_id] || PERSONAS.adler;
     // Try multiple key names (Cloudflare UI may add leading spaces)
     const DEEPSEEK_KEY = env.DEEPSEEK_API_KEY
@@ -129,10 +131,9 @@ export async function onRequest(context) {
     }
 
     // 构建消息列表：system prompt + 历史消息
-    const fullMessages = [
-      { role: 'system', content: persona.system },
-      ...messages
-    ];
+    const fullMessages = isRaw
+      ? messages
+      : [{ role: 'system', content: persona.system }, ...messages];
 
     const resp = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',

@@ -2099,7 +2099,7 @@ function startRandomTest() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       messages: [{ role: 'user', content: 'Generate 15 love/relationship psychology scenario questions in Chinese, based on the 4-dimension model (D: attachment security, S: emotional resonance, E: dominance, O: openness). Output as JSON array: [{"text":"...","dim":"D|S|E|O","options":[{"label":"A","text":"...","effect":{"D":-1,"S":0,"E":0,"O":0}},...]}]. Each question has 4 options (A,B,C,D). Each option effect is +1, -1, or 0 per dimension. Output ONLY the JSON array, no markdown.' }],
-      persona_id: 'adler'
+      persona_id: 'raw'
     })
   })
   .then(function(r) { return r.json(); })
