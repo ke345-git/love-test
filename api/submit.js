@@ -53,7 +53,7 @@ module.exports = async function handler(req, res) {
     const crypto = require('crypto');
     const ipHash = crypto.createHash('sha256').update(clientIp).digest('hex').slice(0, 16);
 
-    const url = `${process.env.SUPABASE_URL}/rest/v1/results`;
+    const url = `${process.env.SUPABASE_URL}/rest/v1/test_results`;
     const body = JSON.stringify({
       nickname: nickname.trim(),
       scores,
