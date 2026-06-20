@@ -26,7 +26,8 @@ module.exports = async function handler(req, res) {
 
   // ----- 从 Supabase 读取数据（直接 REST API，零依赖）-----
   try {
-    const url = `${process.env.SUPABASE_URL}/rest/v1/results?select=*&order=created_at.desc&limit=500`;
+    // 此处把 results 修改为 test_results，和数据库表名一致
+    const url = `${process.env.SUPABASE_URL}/rest/v1/test_results?select=*&order=created_at.desc&limit=500`;
 
     const resp = await fetch(url, {
       method: 'GET',
@@ -51,6 +52,6 @@ module.exports = async function handler(req, res) {
 
   } catch (err) {
     console.error('Server error:', err);
-    return res.status(500).json({ error: '服务器错误' });
+    return res.status(500).json({ error: '服务器错误', detail: err.message });
   }
 };
