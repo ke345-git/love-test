@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#252520"/>
+      <stop offset="100%" stop-color="#181810"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg3)"/>
+  <!-- 棕发 -->
+  <ellipse cx="60" cy="35" rx="33" ry="28" fill="#4a3830"/>
+  <ellipse cx="50" cy="32" rx="15" ry="16" fill="#5a4840"/>
+  <!-- 脸部 -->
+  <ellipse cx="60" cy="50" rx="21" ry="25" fill="#e8d4b8"/>
+  <!-- 浓眉 -->
+  <rect x="44" y="42" width="12" height="3" rx="1.5" fill="#3a2a20"/>
+  <rect x="64" y="42" width="12" height="3" rx="1.5" fill="#3a2a20"/>
+  <!-- 深邃眼睛 -->
+  <ellipse cx="50" cy="49" rx="3" ry="3.5" fill="#2a1a10"/>
+  <ellipse cx="70" cy="49" rx="3" ry="3.5" fill="#2a1a10"/>
+  <!-- 沉思表情 -->
+  <path d="M52 60 Q60 56 68 60" stroke="#c09078" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- 衬衫领 + 领带 -->
+  <path d="M38 75 L60 85 L82 75" fill="#404040"/>
+  <rect x="57" y="72" width="6" height="15" rx="1" fill="#5a4030"/>
+</svg>

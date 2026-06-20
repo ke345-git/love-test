@@ -553,6 +553,127 @@ body {
   margin: 0 auto;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== New Screens ===== */
+#screen-mode-select,
+#screen-psychologist,
+#screen-chat,
+#screen-gallery { display: none; flex: 1; width: 100%; }
+#screen-mode-select.active,
+#screen-psychologist.active,
+#screen-chat.active,
+#screen-gallery.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#screen-chat.active { justify-content: flex-start; padding: 0; max-height: calc(100dvh - 80px); }
+
+/* Mode Select Bento Grid */
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 520px; }
+.mode-card {
+  background: var(--glass); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 28px 22px; cursor: pointer;
+  transition: all 0.35s var(--ease-out); position: relative; overflow: hidden;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.mode-card:hover { background: var(--glass-hover); border-color: var(--border-active); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
+.mode-card:nth-child(3) { grid-column: 1 / -1; }
+.mode-icon { font-size: 2rem; line-height: 1; }
+.mode-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--text); }
+.mode-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+
+/* Psychologist Cards */
+.psycho-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 500px; }
+.psycho-card {
+  background: var(--glass); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 22px 16px; cursor: pointer;
+  transition: all 0.3s var(--ease-out); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.psycho-card:hover { background: var(--glass-hover); border-color: var(--border-active); transform: translateY(-2px); }
+.psycho-avatar { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); flex-shrink: 0; }
+.psycho-avatar svg { width: 100%; height: 100%; display: block; }
+.psycho-name { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--text); }
+.psycho-theory { font-size: 0.72rem; color: var(--accent); opacity: 0.85; }
+
+/* Navigation Bar */
+.nav-bar { display: flex; align-items: center; gap: 12px; padding: 16px 0; width: 100%; max-width: 600px; }
+.nav-back { background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+.nav-back:hover { border-color: var(--border-active); color: var(--text); }
+.nav-title { font-family: var(--font-display); font-size: 1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; }
+
+/* Chat UI */
+.chat-container { flex: 1; width: 100%; max-width: 600px; overflow-y: auto; padding: 12px 0 120px; display: flex; flex-direction: column; gap: 14px; }
+.chat-msg { display: flex; gap: 10px; max-width: 85%; animation: msgIn 0.4s var(--ease-out); }
+@keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.chat-msg.ai { align-self: flex-start; }
+.chat-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.chat-avatar { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+.chat-bubble {
+  padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; line-height: 1.6;
+  color: var(--text); word-break: break-word;
+}
+.chat-msg.ai .chat-bubble { background: var(--glass); border: 1px solid var(--border); border-top-left-radius: 4px; }
+.chat-msg.user .chat-bubble { background: var(--accent); color: #fff; border-top-right-radius: 4px; }
+.chat-actions { display: flex; gap: 6px; margin-top: 4px; }
+.chat-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; }
+.chat-btn:hover { border-color: var(--border-active); color: var(--text); }
+.chat-btn.playing { border-color: var(--accent); color: var(--accent); animation: pulseBtn 0.8s infinite; }
+@keyframes pulseBtn { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+.chat-input-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; padding: 12px 16px 20px; background: linear-gradient(transparent, var(--bg-deep) 40%); display: flex; gap: 8px; z-index: 50; }
+.chat-input { flex: 1; background: var(--glass); border: 1.5px solid var(--border); border-radius: 24px; padding: 12px 18px; color: var(--text); font-size: 0.9rem; outline: none; font-family: var(--font-body); }
+.chat-input:focus { border-color: var(--accent); }
+.chat-send { background: var(--accent); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 1.1rem; flex-shrink: 0; }
+.chat-send:hover { filter: brightness(1.15); }
+.chat-send:disabled { opacity: 0.4; cursor: default; filter: none; }
+
+/* Typing Indicator */
+.typing-dots { display: flex; gap: 4px; padding: 14px 18px; }
+.typing-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); animation: dotBounce 1.4s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotBounce { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
+
+/* Gallery Grid */
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; width: 100%; max-width: 900px; padding: 16px 0; }
+.gallery-card {
+  background: var(--glass); border: 1.5px solid var(--border); border-radius: var(--radius);
+  padding: 20px; cursor: pointer; transition: all 0.3s var(--ease-out);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.gallery-card:hover { background: var(--glass-hover); border-color: var(--border-active); transform: translateY(-2px); }
+.gallery-card.expanded { grid-column: span 2; }
+.gallery-emoji { font-size: 2.2rem; }
+.gallery-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
+.gallery-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.gallery-tag { font-size: 0.68rem; padding: 3px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.gallery-detail { display: none; font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 4px; }
+.gallery-card.expanded .gallery-detail { display: block; }
+
+/* Screen Header */
+.screen-header { text-align: center; margin-bottom: 24px; }
+.screen-header h2 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 4px; color: var(--text); }
+.screen-header p { color: var(--text-dim); font-size: 0.85rem; }
+
+/* AI Analysis */
+.ai-analysis { margin-top: 20px; padding: 18px; background: var(--glass); border: 1.5px solid var(--border); border-radius: var(--radius); display: none; }
+.ai-analysis.visible { display: block; animation: msgIn 0.5s var(--ease-out); }
+.ai-analysis-title { font-family: var(--font-display); font-size: 1rem; margin-bottom: 10px; color: var(--accent); }
+.ai-analysis-text { font-size: 0.88rem; line-height: 1.7; color: var(--text-dim); }
+.ai-loading { text-align: center; padding: 20px; color: var(--text-muted); }
+.chat-error { text-align: center; padding: 32px; color: var(--text-muted); }
+.chat-error button { margin-top: 12px; background: var(--accent); border: none; color: #fff; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .mode-grid, .psycho-grid { grid-template-columns: 1fr; max-width: 360px; }
+  .mode-card:nth-child(3) { grid-column: auto; }
+  .gallery-grid { grid-template-columns: 1fr; }
+  .gallery-card.expanded { grid-column: auto; }
+  .chat-input-bar { max-width: 100%; }
+}
+@media (max-width: 480px) {
+  .chat-msg { max-width: 92%; }
+  .chat-bubble { padding: 10px 14px; font-size: 0.85rem; }
+}
 </style>
 </head>
 <body>
@@ -604,6 +725,81 @@ body {
 </div>
 
 <!-- Admin Overlay -->
+
+  <!-- Mode Select -->
+  <section class="screen" id="screen-mode-select">
+    <div class="screen-header">
+      <h2>选择你的探索方式</h2>
+      <p>四种路径，深入了解你的恋爱人格</p>
+    </div>
+    <div class="mode-grid">
+      <div class="mode-card" data-mode="standard">
+        <div class="mode-icon">📋</div>
+        <div class="mode-title">标准测试</div>
+        <div class="mode-desc">15道情景题，基于四维模型精准定位你的恋爱人格类型</div>
+      </div>
+      <div class="mode-card" data-mode="chat">
+        <div class="mode-icon">💬</div>
+        <div class="mode-title">AI 专家对话</div>
+        <div class="mode-desc">与心理学大师一对一深度对话，获得个性化关系洞察</div>
+      </div>
+      <div class="mode-card" data-mode="random">
+        <div class="mode-icon">🎲</div>
+        <div class="mode-title">随机题目</div>
+        <div class="mode-desc">AI 实时生成全新情景题，每次测试都是独一无二的体验</div>
+      </div>
+      <div class="mode-card" data-mode="gallery">
+        <div class="mode-icon">🖼</div>
+        <div class="mode-title">人格画廊</div>
+        <div class="mode-desc">浏览全部14种恋爱人格类型，发现每一种爱的模样</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Psychologist Selection -->
+  <section class="screen" id="screen-psychologist">
+    <div class="nav-bar">
+      <button class="nav-back" id="btnPsychoBack">← 返回</button>
+    </div>
+    <div class="screen-header">
+      <h2>选择你的对话专家</h2>
+      <p>每位心理学家有独特的理论视角和对话风格</p>
+    </div>
+    <div class="psycho-grid" id="psychoGrid"></div>
+  </section>
+
+  <!-- AI Chat -->
+  <section class="screen" id="screen-chat">
+    <div class="nav-bar" style="position:sticky;top:0;z-index:40;background:linear-gradient(var(--bg-deep) 60%,transparent);padding-bottom:8px">
+      <button class="nav-back" id="btnChatBack">← 换专家</button>
+      <div class="nav-title">
+        <div class="nav-avatar" id="chatAvatar"></div>
+        <span id="chatPersonaName"></span>
+      </div>
+    </div>
+    <div class="chat-container" id="chatContainer">
+      <div style="text-align:center;padding:40px 20px;color:var(--text-muted)">
+        正在连接...
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" class="chat-input" id="chatInput" placeholder="输入你的想法..." autocomplete="off">
+      <button class="chat-send" id="btnChatSend">↑</button>
+    </div>
+  </section>
+
+  <!-- Personality Gallery -->
+  <section class="screen" id="screen-gallery">
+    <div class="nav-bar">
+      <button class="nav-back" id="btnGalleryBack">← 返回</button>
+    </div>
+    <div class="screen-header">
+      <h2>人格画廊</h2>
+      <p>14种恋爱人格 - 每一种都是爱的独特表达</p>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </section>
+
 <div class="admin-overlay" id="adminOverlay">
   <div class="admin-panel" id="adminPanel"></div>
 </div>
@@ -1593,6 +1789,489 @@ console.log('%c基于恋爱认知-行为四维模型 | 15道情景题 | 14种人
   'color:#6b5d53;font-size:0.85em');
 console.log('%cDesigned with Taste Skill v2',
   'color:#a89888;font-size:0.8em;font-style:italic');
+
+
+// ========== NEW SCREENS & DOM REFS ==========
+const screenModeSelect = document.getElementById('screen-mode-select');
+const screenPsychologist = document.getElementById('screen-psychologist');
+const screenChat = document.getElementById('screen-chat');
+const screenGallery = document.getElementById('screen-gallery');
+const chatContainer = document.getElementById('chatContainer');
+const chatInput = document.getElementById('chatInput');
+const chatAvatar = document.getElementById('chatAvatar');
+const chatPersonaName = document.getElementById('chatPersonaName');
+const psychoGrid = document.getElementById('psychoGrid');
+const galleryGrid = document.getElementById('galleryGrid');
+
+// ========== PSYCHOLOGIST DATA ==========
+const PSYCHOLOGISTS = [
+  { id: 'nuwa', name: '女娲', emoji: '\ud83e\uddd8', theory: '依恋理论 + 客体关系', desc: '温柔包容的治愈者，帮你看见关系中的安全感根源', avatar: '\'' + avatar_nuwa + '\'' },
+  { id: 'jung', name: '荣格博士', emoji: '\ud83e\uddd4', theory: '分析心理学', desc: '深邃的智慧老人，用原型和象征解读你的关系模式', avatar: '\'' + avatar_jung + '\'' },
+  { id: 'fromm', name: '弗洛姆教授', emoji: '\ud83d\udcda', theory: '人本精神分析', desc: '理性的温暖声音，教你爱的艺术与存在的方式', avatar: '\'' + avatar_fromm + '\'' },
+  { id: 'satir', name: '萨提尔', emoji: '\ud83c\udf38', theory: '家庭治疗', desc: '温暖的接纳者，帮你发现原生家庭雕刻的关系密码', avatar: '\'' + avatar_satir + '\'' }
+];
+
+var currentPersona = null;
+var chatMessages = [];
+var isChatting = false;
+
+// ========== SCREEN NAVIGATION ==========
+function showScreenExt(screen) {
+  [screenLanding, screenQuestions, screenResults, screenModeSelect, screenPsychologist, screenChat, screenGallery].forEach(function(s) {
+    if (s) s.classList.remove('active');
+  });
+  if (screen) screen.classList.add('active');
+}
+
+// Override showScreen to handle new screens
+var _showScreenOrig = showScreen;
+showScreen = function(screen) {
+  showScreenExt(screen);
+};
+
+// ========== LANDING PAGE -> MODE SELECT ==========
+// Override the start button: go to mode select first, not directly to questions
+btnStart.removeEventListener('click', startTest);
+btnStart.addEventListener('click', function() {
+  if (!state.nickname) return;
+  showScreenExt(screenModeSelect);
+});
+
+// Mode card clicks
+document.querySelectorAll('.mode-card').forEach(function(card) {
+  card.addEventListener('click', function() {
+    var mode = this.dataset.mode;
+    if (mode === 'standard') {
+      startTest();
+    } else if (mode === 'chat') {
+      showScreenExt(screenPsychologist);
+      renderPsychologistCards();
+    } else if (mode === 'random') {
+      startRandomTest();
+    } else if (mode === 'gallery') {
+      showScreenExt(screenGallery);
+      renderGallery();
+    }
+  });
+});
+
+// ========== PSYCHOLOGIST SELECTION ==========
+function renderPsychologistCards() {
+  var html = '';
+  PSYCHOLOGISTS.forEach(function(p) {
+    html += '<div class="psycho-card" data-id="' + p.id + '">';
+    html += '<div class="psycho-avatar">' + p.avatar + '</div>';
+    html += '<div class="psycho-name">' + p.emoji + ' ' + p.name + '</div>';
+    html += '<div class="psycho-theory">' + p.theory + '</div>';
+    html += '</div>';
+  });
+  psychoGrid.innerHTML = html;
+
+  psychoGrid.querySelectorAll('.psycho-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      var id = this.dataset.id;
+      PSYCHOLOGISTS.forEach(function(p) {
+        if (p.id === id) { currentPersona = p; }
+      });
+      startAIChat();
+    });
+  });
+}
+
+document.getElementById('btnPsychoBack').addEventListener('click', function() {
+  showScreenExt(screenModeSelect);
+});
+
+// ========== AI CHAT ==========
+function startAIChat() {
+  showScreenExt(screenChat);
+  chatAvatar.innerHTML = currentPersona.avatar;
+  chatPersonaName.textContent = currentPersona.emoji + ' ' + currentPersona.name;
+  chatMessages = [];
+  chatContainer.innerHTML = '';
+  chatInput.value = '';
+  chatInput.focus();
+
+  // Show typing, then get AI opening message
+  showTyping();
+  sendToAI([], function(reply) {
+    hideTyping();
+    addAIMessage(reply);
+  });
+}
+
+document.getElementById('btnChatBack').addEventListener('click', function() {
+  showScreenExt(screenPsychologist);
+  renderPsychologistCards();
+});
+
+document.getElementById('btnChatSend').addEventListener('click', sendChatMessage);
+chatInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+});
+
+function sendChatMessage() {
+  var text = chatInput.value.trim();
+  if (!text || isChatting) return;
+
+  chatInput.value = '';
+  addUserMessage(text);
+  isChatting = true;
+
+  // Add user message to history
+  chatMessages.push({ role: 'user', content: text });
+
+  showTyping();
+  sendToAI(chatMessages, function(reply) {
+    hideTyping();
+    addAIMessage(reply);
+    isChatting = false;
+    chatInput.focus();
+  });
+}
+
+function sendToAI(messages, callback) {
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: messages,
+      persona_id: currentPersona ? currentPersona.id : 'nuwa'
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) {
+      hideTyping();
+      showChatError(data.error);
+    } else {
+      chatMessages.push({ role: 'assistant', content: data.reply });
+      callback(data.reply);
+    }
+  })
+  .catch(function(err) {
+    hideTyping();
+    showChatError('网络连接失败，请检查网络后重试');
+    isChatting = false;
+  });
+}
+
+function addUserMessage(text) {
+  var div = document.createElement('div');
+  div.className = 'chat-msg user';
+  div.innerHTML = '<div class="chat-bubble">' + escHtml(text) + '</div>';
+  chatContainer.appendChild(div);
+  scrollChat();
+}
+
+function addAIMessage(text) {
+  var div = document.createElement('div');
+  div.className = 'chat-msg ai';
+  var avatarHtml = currentPersona ? currentPersona.avatar : '';
+  div.innerHTML = '<div class="chat-avatar">' + avatarHtml + '</div>' +
+    '<div><div class="chat-bubble">' + escHtml(text) + '</div>' +
+    '<div class="chat-actions"><button class="chat-btn btn-tts" data-text="' + escHtml(text).replace(/"/g,'&quot;') + '">TTS</button></div></div>';
+  chatContainer.appendChild(div);
+
+  // TTS button
+  div.querySelector('.btn-tts').addEventListener('click', function() {
+    var btn = this;
+    if (btn.classList.contains('playing')) { btn.classList.remove('playing'); return; }
+    btn.classList.add('playing');
+    setTimeout(function() { btn.classList.remove('playing'); }, 3000);
+    playTTS(text);
+  });
+
+  scrollChat();
+}
+
+function showTyping() {
+  var div = document.createElement('div');
+  div.className = 'chat-msg ai';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  chatContainer.appendChild(div);
+  scrollChat();
+}
+
+function hideTyping() {
+  var el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function scrollChat() {
+  setTimeout(function() {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }, 100);
+}
+
+function showChatError(msg) {
+  var div = document.createElement('div');
+  div.className = 'chat-error';
+  div.innerHTML = '<p>' + escHtml(msg) + '</p><button onclick="this.parentElement.remove()">重试</button>';
+  chatContainer.appendChild(div);
+}
+
+// ========== TTS (MiMo via /api/tts) ==========
+var ttsAudio = null;
+
+function playTTS(text) {
+  if (ttsAudio) { ttsAudio.pause(); ttsAudio = null; }
+
+  var voice = currentPersona ? currentPersona.id : 'nuwa';
+  var voiceMap = { nuwa: 'gentle_female', jung: 'deep_male', fromm: 'warm_male', satir: 'warm_female' };
+
+  fetch('/api/tts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: text, voice: voiceMap[voice] || 'gentle_female' })
+  })
+  .then(function(r) {
+    if (r.headers.get('content-type').includes('audio')) {
+      return r.blob().then(function(blob) {
+        var url = URL.createObjectURL(blob);
+        ttsAudio = new Audio(url);
+        ttsAudio.play();
+      });
+    }
+    return r.json().then(function(data) {
+      if (data.fallback) { showToast('语音功能暂不可用'); }
+    });
+  })
+  .catch(function() { /* silently fail for TTS */ });
+}
+
+// ========== RANDOM QUESTIONS (AI Generated) ==========
+function startRandomTest() {
+  showToast('AI 正在生成题目...');
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [{ role: 'user', content: 'Generate 15 love/relationship psychology scenario questions in Chinese, based on the 4-dimension model (D: attachment security, S: emotional resonance, E: dominance, O: openness). Output as JSON array: [{"text":"...","dim":"D|S|E|O","options":[{"label":"A","text":"...","effect":{"D":-1,"S":0,"E":0,"O":0}},...]}]. Each question has 4 options (A,B,C,D). Each option effect is +1, -1, or 0 per dimension. Output ONLY the JSON array, no markdown.' }],
+      persona_id: 'nuwa'
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    try {
+      var questions = JSON.parse(data.reply.replace(/```json|```/g,'').trim());
+      if (Array.isArray(questions) && questions.length >= 10) {
+        window._randomQuestions = questions;
+        state.answers = new Array(questions.length).fill(null);
+        // Override QUESTIONS temporarily
+        window._origQuestions = QUESTIONS;
+        // We can't override const, so use a dynamic question source
+        window._usingRandom = true;
+        window._randomQ = questions;
+        startTestWithQuestions(questions);
+      } else {
+        showToast('题目生成失败，请重试');
+        showScreenExt(screenModeSelect);
+      }
+    } catch(e) {
+      showToast('题目解析失败，请重试');
+      showScreenExt(screenModeSelect);
+    }
+  })
+  .catch(function() {
+    showToast('AI 服务暂不可用，请稍后重试');
+    showScreenExt(screenModeSelect);
+  });
+}
+
+function startTestWithQuestions(questions) {
+  state.answers = new Array(questions.length).fill(null);
+  state.currentQuestion = 0;
+  progressWrap.style.display = 'block';
+  updateProgress();
+  showScreen(screenQuestions);
+  renderQuestionExt(0, questions);
+}
+
+// Override renderQuestion for random questions
+var _renderQuestionOrig = renderQuestion;
+renderQuestion = function(index) {
+  if (window._usingRandom && window._randomQ) {
+    renderQuestionExt(index, window._randomQ);
+  } else {
+    _renderQuestionOrig(index);
+  }
+};
+
+function renderQuestionExt(index, questions) {
+  state.currentQuestion = index;
+  updateProgress();
+  var q = questions[index];
+
+  var html = '<div class="question-fade-enter">';
+  html += '<div class="question-header">';
+  html += '<span class="question-counter">Q' + (index + 1) + '</span>';
+  html += '<span>/ ' + questions.length + '</span>';
+  html += '</div>';
+  html += '<h2 class="question-text">' + q.text + '</h2>';
+  html += '<div class="options-grid">';
+
+  q.options.forEach(function(opt, optIdx) {
+    var selected = state.answers[index] === optIdx ? ' selected' : '';
+    html += '<button class="option-btn' + selected + '" data-opt="' + optIdx + '">';
+    html += '<span class="option-label">' + opt.label + '</span>';
+    html += opt.text;
+    html += '</button>';
+  });
+
+  html += '</div></div>';
+  questionWrap.innerHTML = html;
+
+  questionWrap.querySelectorAll('.option-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      selectOptionExt(index, parseInt(this.dataset.opt), questions);
+    });
+  });
+}
+
+function selectOptionExt(questionIndex, optIdx, questions) {
+  if (state.answers[questionIndex] !== null) return;
+  state.answers[questionIndex] = optIdx;
+
+  questionWrap.querySelectorAll('.option-btn').forEach(function(btn, i) {
+    btn.classList.toggle('selected', i === optIdx);
+  });
+
+  setTimeout(function() {
+    if (questionIndex < questions.length - 1) {
+      renderQuestionExt(questionIndex + 1, questions);
+    } else {
+      finishTestExt(questions);
+    }
+  }, 400);
+}
+
+function finishTestExt(questions) {
+  if (state.scores !== null) return;
+  progressWrap.style.display = 'none';
+  state.scores = calculateScoresExt(questions);
+  state.personality = classifyPersonality(state.scores);
+  saveResult();
+  showScreen(screenResults);
+  renderResults();
+}
+
+function calculateScoresExt(questions) {
+  var D = 5, S = 5, E = 5, O = 5;
+  state.answers.forEach(function(optIdx, qIdx) {
+    if (optIdx === null) return;
+    var eff = questions[qIdx].options[optIdx].effect;
+    D += eff.D || 0; S += eff.S || 0; E += eff.E || 0; O += eff.O || 0;
+  });
+  return { D: Math.max(1, Math.min(10, D)), S: Math.max(1, Math.min(10, S)), E: Math.max(1, Math.min(10, E)), O: Math.max(1, Math.min(10, O)) };
+}
+
+// ========== AI ANALYSIS ON RESULTS ==========
+// Add AI analysis button to results after rendering
+var _renderResultsOrig = renderResults;
+renderResults = function() {
+  _renderResultsOrig();
+
+  // Add AI analysis section
+  var actionsRow = document.querySelector('.result-actions');
+  if (actionsRow) {
+    var aiBtn = document.createElement('button');
+    aiBtn.className = 'btn btn-ghost';
+    aiBtn.id = 'btnAIAnalysis';
+    aiBtn.textContent = 'AI Analysis';
+    aiBtn.addEventListener('click', generateAIAnalysis);
+    actionsRow.appendChild(aiBtn);
+
+    // AI analysis container
+    var aiDiv = document.createElement('div');
+    aiDiv.className = 'ai-analysis';
+    aiDiv.id = 'aiAnalysisSection';
+    resultGrid.appendChild(aiDiv);
+  }
+};
+
+function generateAIAnalysis() {
+  var section = document.getElementById('aiAnalysisSection');
+  section.classList.add('visible');
+  section.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p style="margin-top:8px">AI is analyzing your personality...</p></div>';
+
+  var p = PERSONALITIES[state.personality];
+  var s = state.scores;
+
+  var prompt = 'Based on the following love personality test results, provide a 200-300 word personalized analysis in Chinese:\n' +
+    'Personality type: ' + p.emoji + ' ' + p.name + '\n' +
+    'Scores: D(attachment security)=' + s.D + ' S(emotional resonance)=' + s.S + ' E(dominance)=' + s.E + ' O(openness)=' + s.O + '\n' +
+    'Description: ' + p.desc + '\n' +
+    'Pain point: ' + p.pain + '\n' +
+    'Match suggestion: ' + p.match + '\n\n' +
+    'Please give a warm, insightful analysis that: 1) highlights their unique strengths in relationships 2) gently points out growth areas 3) offers one concrete suggestion. Use encouraging, non-judgmental language.';
+
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [{ role: 'user', content: prompt }],
+      persona_id: 'nuwa'
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) {
+      section.innerHTML = '<div class="ai-analysis-text" style="color:#e06060">AI analysis temporarily unavailable: ' + data.error + '</div>';
+    } else {
+      section.innerHTML = '<div class="ai-analysis-title">AI Analysis</div><div class="ai-analysis-text">' + escHtml(data.reply) + '</div>';
+    }
+  })
+  .catch(function() {
+    section.innerHTML = '<div class="ai-analysis-text" style="color:#e06060">Network error. Please try again later.</div>';
+  });
+}
+
+// ========== PERSONALITY GALLERY ==========
+function renderGallery() {
+  var html = '';
+  PERSONALITIES.forEach(function(p) {
+    html += '<div class="gallery-card" data-id="' + p.id + '">';
+    html += '<div class="gallery-emoji">' + p.emoji + '</div>';
+    html += '<div class="gallery-name">' + p.name + '</div>';
+    html += '<div class="gallery-tags">';
+    p.tags.forEach(function(t) { html += '<span class="gallery-tag">' + t + '</span>'; });
+    html += '</div>';
+    html += '<div class="gallery-detail"><p>' + p.desc + '</p><p style="margin-top:10px"><strong>Matching:</strong> ' + p.match + '</p><p style="margin-top:8px"><strong>Growth:</strong> ' + p.pain + '</p></div>';
+    html += '</div>';
+  });
+  galleryGrid.innerHTML = html;
+
+  galleryGrid.querySelectorAll('.gallery-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      var wasExpanded = this.classList.contains('expanded');
+      galleryGrid.querySelectorAll('.gallery-card').forEach(function(c) { c.classList.remove('expanded'); });
+      if (!wasExpanded) { this.classList.add('expanded'); }
+    });
+  });
+}
+
+document.getElementById('btnGalleryBack').addEventListener('click', function() {
+  showScreenExt(screenModeSelect);
+});
+
+// ========== UPDATE START TEST TO ACCEPT CUSTOM QUESTIONS ==========
+// Reset state.answers size when using random questions
+var _startTestOrig = startTest;
+startTest = function() {
+  window._usingRandom = false;
+  window._randomQ = null;
+  state.answers = new Array(15).fill(null);
+  state.currentQuestion = 0;
+  progressWrap.style.display = 'block';
+  updateProgress();
+  showScreen(screenQuestions);
+  renderQuestion(0);
+};
 
 })();
 // vim: ts=2 sw=2

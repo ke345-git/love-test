@@ -1,69 +1,82 @@
-# 💝 恋爱人格代码 — Love Personality Code
+# 💝 恋爱人格代码 v3.0 — Love Personality Code
 
-基于**恋爱认知-行为四维模型**（D 依恋安全感 / S 情绪共振力 / E 关系决策力 / O 开放性）的在线人格测试。
+基于**恋爱认知-行为四维模型**（D 依恋安全感 / S 情绪共振力 / E 关系决策力 / O 开放性），集成 AI 心理学专家对话的在线人格测试。
 
-15 道情景题 → 14 种人格类型 → 4 轴雷达图。
+**4 种探索模式**：标准测试 | AI 专家对话 | 随机题目 | 人格画廊
 
-## 🏗 项目结构
+## 技术栈
+
+| 层 | 技术 | 费用 |
+|---|---|---|
+| 前端 | 单文件 HTML/CSS/JS SPA | 免费 |
+| AI 对话 | DeepSeek V4 Flash（通过 Cloudflare Function 代理） | ¥1/百万 Token |
+| AI 语音 | 小米 MiMo-V2.5-TTS | 限时免费 |
+| 数据库 | Supabase PostgreSQL | 免费 |
+| 托管 | Cloudflare Pages | 免费 |
+| 域名 | lanlove.online | 自购 |
+
+## 项目结构
 
 ```
 love-test/
-├── index.html          # 前端测试页面
-├── api/
-│   ├── submit.js       # 云函数：接收测试结果 → 存入 Supabase（零 npm 依赖）
-│   └── results.js      # 云函数：管理后台查询（零 npm 依赖）
-├── vercel.json         # Vercel 部署配置
-├── setup.sql           # Supabase 建表 SQL
-├── .env.example        # 环境变量模板
-├── .gitignore          # 不提交 .env 等敏感文件
-└── README.md           # 本文件
+├── index.html              # 全部前端（SPA）
+├── functions/
+│   ├── _middleware.js      # CORS + 速率限制
+│   └── api/
+│       ├── chat.js         # DeepSeek AI 对话代理
+│       └── tts.js          # MiMo-TTS 语音合成代理
+├── assets/avatars/         # 心理学家 SVG 头像
+│   ├── nuwa.svg
+│   ├── jung.svg
+│   ├── fromm.svg
+│   └── satir.svg
+├── setup.sql               # Supabase 数据库建表
+├── .gitignore
+└── README.md
 ```
 
-## 🚀 部署步骤
+## 心理学家
 
-### 1. 创建 Supabase 数据库（免费）
+| 专家 | 理论取向 | 风格 |
+|------|---------|------|
+| 女娲 🧘 | 依恋理论 + 客体关系 | 温柔包容的治愈者 |
+| 荣格博士 🧔 | 分析心理学 | 深邃的智慧老人 |
+| 弗洛姆教授 📚 | 人本精神分析 | 理性的温暖声音 |
+| 萨提尔 🌸 | 家庭治疗 | 温暖的接纳者 |
 
-1. 打开 [supabase.com](https://supabase.com) → Sign Up 注册
-2. 创建新项目 → 记下数据库密码
-3. 进入项目 → **SQL Editor** → 粘贴 `setup.sql` 全部内容 → 点 **Run**
-4. 进入 **Settings → API** → 复制：
-   - `Project URL`（例如 `https://xxxxx.supabase.co`）
-   - `anon public key`（以 `eyJ...` 开头）
+## 部署
 
-### 2. 部署到 Vercel
+### 前置条件
 
-1. 把 `love-test` 文件夹推送到 GitHub 仓库
-2. 打开 [vercel.com](https://vercel.com) → Import 导入该仓库
-3. 在 **Environment Variables** 中添加：
+1. **DeepSeek API Key**：注册 [platform.deepseek.com](https://platform.deepseek.com) → 实名认证 → 创建 API Key
+2. **MiMo-TTS API Key**（可选）：语音合成需要
+3. **Supabase** 数据库已配置
+4. **Cloudflare** 账号 + 域名
+
+### Cloudflare Pages 环境变量
+
+在 Cloudflare Pages → Settings → Environment Variables 中添加：
 
 | 变量名 | 值 |
 |---|---|
-| `SUPABASE_URL` | 你的 Supabase Project URL |
-| `SUPABASE_ANON_KEY` | 你的 Supabase anon key |
-| `ADMIN_PASSWORD` | 你自己设置的管理密码 |
+| `DEEPSEEK_API_KEY` | `sk-xxx` |
+| `MIMO_API_KEY` | MiMo API Key（可选，没有则 TTS 自动降级） |
+| `SUPABASE_URL` | 已配置（在 index.html 中） |
+| `SUPABASE_ANON_KEY` | 已配置（在 index.html 中） |
 
-4. 点击 **Deploy** → 等待完成 → 获得域名（如 `https://love-test.vercel.app`）
+### 部署步骤
 
-### 3. 使用管理后台
+1. 推送代码到 GitHub
+2. Cloudflare Pages 连接仓库 → 自动部署
+3. 添加环境变量 → 重新部署
+4. 自定义域名绑定 `lanlove.online`
 
-1. 打开你的域名
-2. 点击页面底部的 **📊 管理后台**
-3. 输入 `ADMIN_PASSWORD` 中设置的密码
-4. 可以：
-   - 查看所有测试者昵称、四维得分、人格类型
-   - 点击 **📋 查看答题** 展开每道题的选项详情
-   - 导出 CSV
+## 数据库
 
-## 📊 数据说明
+在 Supabase SQL Editor 中运行 `setup.sql` 创建表：
+- `test_results` — 标准测试结果
+- `chat_sessions` — AI 对话记录
 
-- 数据存储在 **Supabase PostgreSQL** 数据库中
-- 每条记录包含：昵称、四维得分、人格类型、**15 道题的完整选项**
-- 数据在云端持久保存，不受浏览器清除缓存影响
-- IP 仅存储 SHA256 哈希前 16 位用于频率限制，不追踪精确位置
+## 管理后台
 
-## 🔒 安全
-
-- `.env` 文件已加入 `.gitignore`，不会提交到 Git
-- Supabase 密钥只存在于 Vercel 服务器端环境变量中
-- 管理后台通过 `ADMIN_PASSWORD` 验证，密码在服务端校验
-- 用户提交频率限制：每 IP 每 10 秒最多 3 次
+页面底部 **📊 管理后台** → 输入密码查看所有测试和对话数据。

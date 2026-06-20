@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2d1f2c"/>
+      <stop offset="100%" stop-color="#1a1018"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg)"/>
+  <!-- 长发 -->
+  <ellipse cx="60" cy="40" rx="35" ry="42" fill="#3a2530"/>
+  <!-- 脸部 -->
+  <ellipse cx="60" cy="52" rx="22" ry="26" fill="#e8c9a0"/>
+  <!-- 发髻 -->
+  <circle cx="60" cy="22" r="14" fill="#2d1820"/>
+  <circle cx="52" cy="18" r="5" fill="#e8784a" opacity="0.5"/>
+  <!-- 眼睛 -->
+  <ellipse cx="52" cy="50" rx="3" ry="4" fill="#3a2520"/>
+  <ellipse cx="68" cy="50" rx="3" ry="4" fill="#3a2520"/>
+  <!-- 微笑 -->
+  <path d="M52 62 Q60 70 68 62" stroke="#d4907a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- 衣领 -->
+  <path d="M38 78 Q60 90 82 78" fill="#4a2a3a"/>
+</svg>
