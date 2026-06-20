@@ -144,7 +144,7 @@ export async function onRequest(context) {
       body: JSON.stringify({
         model: 'deepseek-v4-flash',
         messages: fullMessages,
-        max_tokens: 500,
+        max_tokens: isRaw ? 4000 : 500,
         temperature: 0.8
       })
     });
