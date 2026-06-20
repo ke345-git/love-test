@@ -39,7 +39,7 @@ module.exports = async function handler(req, res) {
     if (!resp.ok) {
       const errText = await resp.text();
       console.error('Supabase query error:', resp.status, errText);
-      return res.status(500).json({ error: '查询失败' });
+      return res.status(500).json({ error: '查询失败', detail: resp.status + ': ' + errText.slice(0, 200) });
     }
 
     const data = await resp.json();
