@@ -612,11 +612,11 @@ body {
 
 <script>
 (function() {
-  // ===== Supabase Config (direct frontend, no backend needed) =====
+'use strict';
+  // ===== Supabase Config =====
   var SUPABASE_URL = 'https://hvrgoggnmrvtghmvcyjz.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_xkc2piAUKi1hVmSfbvIATA_Be260pEC';
-  var ADMIN_PW_HASH = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
-'use strict';
+  var ADMIN_PASSWORD = '123456';
 
 /* ============================================
    恋爱人格代码 - 四维模型版
@@ -1304,7 +1304,7 @@ var STORAGE_KEY = 'love_personality_4d_results';
 
 function saveResult() {
   // 1. 本地备份（localStorage）
-  var records = getRecords();
+  var records = cloudRecords;
   records.push({
     time: new Date().toISOString(),
     nickname: state.nickname,
@@ -1323,7 +1323,6 @@ function saveResult() {
 
 function submitToCloud() {
   var p = PERSONALITIES[state.personality];
-
   var answers = QUESTIONS.map(function(q, idx) {
     var optIdx = state.answers[idx];
     var opt = q.options[optIdx];
@@ -1384,7 +1383,7 @@ function renderAdminPanel() {
     '<input type="password" class="nickname-input" id="adminPassword" placeholder="请输入管理密码" autocomplete="off">' +
     '<button class="btn btn-primary btn-small" id="btnAdminLogin">验证进入</button>' +
     '</div>' +
-    '<p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px">默认密码 <code>admin123</code>，可在代码中修改 <code>ADMIN_PW_HASH</code></p>';
+    '<p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px">密码 <code>123456</code>，可在代码中修改 <code>ADMIN_PASSWORD</code></p>';
 
   $('#btnAdminClose').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
 
@@ -1403,66 +1402,198 @@ function fetchDashboard() {
   var password = $('#adminPassword').value;
   if (!password) { showToast('请输入密码'); return; }
 
-  // Client-side password (SHA256)
-  sha256(password).then(function(pwHash) {
-    if (pwHash !== ADMIN_PW_HASH) {
+  if (password !== ADMIN_PASSWORD) {
+    adminPanel.innerHTML = '<button class="admin-close" id="btnAdminClose2">&times;</button>' +
+      '<h3>Admin</h3>' +
+      '<div style="text-align:center;padding:20px;color:#e06060">Wrong password</div>' +
+      '<button class="btn btn-ghost btn-small" id="btnRetryLogin" style="margin:0 auto;display:block">Back</button>';
+    $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
+    $('#btnRetryLogin').addEventListener('click', renderAdminPanel);
+    return;
+  }
+
+  adminPanel.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div><p style="margin-top:12px;color:var(--text-muted)">Loading...</p></div>';
+
+  fetch(SUPABASE_URL + '/rest/v1/test_results?select=*&order=created_at.desc&limit=500', {
+    method: 'GET',
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+    .then(function(res) { return res.json(); })
+    .then(function(data) { cloudRecords = data || []; renderAdminDashboard(); })
+    .catch(function(err) {
       adminPanel.innerHTML = '<button class="admin-close" id="btnAdminClose2">&times;</button>' +
-        '<h3>🔐 Admin</h3>' +
-        '<div style="text-align:center;padding:20px;color:#e06060">❌ Wrong password</div>' +
-        '<button class="btn btn-ghost btn-small" id="btnRetryLogin" style="margin:0 auto;display:block">↩️ Back</button>';
+        '<h3>Admin</h3>' +
+        '<div style="text-align:center;padding:20px;color:#e06060">Cannot connect to Supabase</div>' +
+        '<button class="btn btn-ghost btn-small" id="btnRetryLogin" style="margin:0 auto;display:block">Back</button>';
       $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
       $('#btnRetryLogin').addEventListener('click', renderAdminPanel);
-      return;
-    }
-
-    adminPanel.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div><p style="margin-top:12px;color:var(--text-muted)">Loading from cloud...</p></div>';
-
-    fetch(SUPABASE_URL + '/rest/v1/test_results?select=*&order=created_at.desc&limit=500', {
-      method: 'GET',
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
-    })
-      .then(function(res) { return res.json(); })
-      .then(function(data) { cloudRecords = data || []; renderAdminDashboard(); })
-      .catch(function(err) {
-        adminPanel.innerHTML = '<button class="admin-close" id="btnAdminClose2">&times;</button>' +
-          '<h3>🔐 Admin</h3>' +
-          '<div style="text-align:center;padding:20px;color:#e06060">❌ Cannot connect to Supabase</div>' +
-          '<button class="btn btn-ghost btn-small" id="btnRetryLogin" style="margin:0 auto;display:block">↩️ Back</button>';
-        $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
-        $('#btnRetryLogin').addEventListener('click', renderAdminPanel);
-      });
-  });
+    });
 }
 
 
+function renderAdminDashboard() {
+  var records = cloudRecords;
+  var html = '<button class="admin-close" id="btnAdminClose2">&times;</button>';
+  html += '<h3>📊 测试记录管理</h3>';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+  html += '<span style="font-size:0.8rem;color:var(--text-muted)">共 <strong>' + records.length + '</strong> 条记录（云端实时数据）</span>';
+  html += '<button class="btn btn-ghost btn-small" id="btnRefreshData">🔄 刷新</button>';
+  html += '</div>';
 
-// ---------- SHA256 (async, uses Web Crypto) ----------
-function sha256(str) {
-  if (window.crypto && window.crypto.subtle) {
-    var encoder = new TextEncoder();
-    return window.crypto.subtle.digest("SHA-256", encoder.encode(str)).then(function(buffer) {
-      return Array.prototype.map.call(new Uint8Array(buffer), function(b) {
-        return ("00" + b.toString(16)).slice(-2);
-      }).join("");
+  if (records.length === 0) {
+    html += '<div class="admin-empty">暂无云端测试记录<br><small style="color:var(--text-muted)">有人提交测试后，数据会自动出现在这里</small></div>';
+  } else {
+    html += '<div style="overflow-x:auto"><table class="admin-table"><thead><tr>';
+    html += '<th>#</th><th>时间</th><th>昵称</th><th>D安全感</th><th>S共振力</th><th>E决策力</th><th>O开放性</th><th>人格类型</th><th>详情</th>';
+    html += '</tr></thead><tbody>';
+
+    records.forEach(function(r, i) {
+      var d = new Date(r.created_at);
+      var timeStr = d.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+      html += '<tr>';
+      html += '<td>' + (i + 1) + '</td>';
+      html += '<td>' + timeStr + '</td>';
+      html += '<td>' + escHtml(r.nickname) + '</td>';
+      // code column removed - DB stores personality_type instead
+      html += '<td>' + (r.scores.D || '-') + '</td>';
+      html += '<td>' + (r.scores.S || '-') + '</td>';
+      html += '<td>' + (r.scores.E || '-') + '</td>';
+      html += '<td>' + (r.scores.O || '-') + '</td>';
+      html += '<td>' + (r.personality_type || '-') + '</td>';
+      html += '<td><button class="btn btn-ghost btn-small btn-detail" data-idx="' + i + '">📋 查看答题</button></td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+  }
+
+  html += '<div class="admin-actions">';
+  html += '<button class="btn btn-primary btn-small" id="btnExportCSV">📥 导出 CSV</button>';
+  html += '<button class="btn btn-ghost btn-small" id="btnBackToLogin">↩️ 切换账号</button>';
+  html += '</div>';
+
+  html += '<div style="margin-top:20px;padding:12px;background:rgba(255,255,255,0.02);border-radius:10px;font-size:0.75rem;color:var(--text-muted)">';
+  html += '💡 <strong>数据来源：</strong>Supabase 云端数据库。所有用户的测试结果实时同步，不会因清除浏览器缓存而丢失。';
+  html += '</div>';
+
+  // 展开答题详情的弹层容器
+  html += '<div id="detailOverlay" class="detail-overlay" style="display:none"><div id="detailContent" class="detail-content"></div></div>';
+
+  adminPanel.innerHTML = html;
+
+  $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
+  $('#btnExportCSV').addEventListener('click', exportCSV);
+  $('#btnRefreshData').addEventListener('click', function() {
+    var password = $('#adminPassword').value;
+    if (password) {
+      adminPanel.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div></div>';
+      fetch(SUPABASE_URL + '/rest/v1/test_results?select=*&order=created_at.desc&limit=500', {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+      })
+        .then(function(res) { return res.json(); })
+        .then(function(data) { cloudRecords = data || []; renderAdminDashboard(); });
+    }
+  });
+  $('#btnBackToLogin').addEventListener('click', function() {
+    cloudRecords = [];
+    renderAdminPanel();
+  });
+
+  // 绑定答题详情按钮
+  adminPanel.querySelectorAll('.btn-detail').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var idx = parseInt(this.dataset.idx);
+      showAnswerDetail(idx);
+    });
+  });
+
+  // 关闭详情弹层
+  var detailOverlay = document.getElementById('detailOverlay');
+  if (detailOverlay) {
+    detailOverlay.addEventListener('click', function() {
+      detailOverlay.style.display = 'none';
     });
   }
-  return Promise.resolve("");
+}
+
+function escHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function showAnswerDetail(idx) {
+  var r = cloudRecords[idx];
+  if (!r || !r.answers) return;
+
+  var html = '<div class="detail-card" onclick="event.stopPropagation()">';
+  html += "<button class=\"admin-close\" onclick=\"document.getElementById('detailOverlay').style.display='none'\">&times;</button>";
+  html += '<h3>📋 ' + escHtml(r.nickname) + ' 的答题详情</h3>';
+  html += '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">';
+  html += '人格类型：' + (r.personality_type || '-') + ' &nbsp;|&nbsp; ';
+  html += '代码：<code>' + r.code + '</code></p>';
+
+  html += '<div style="max-height:60vh;overflow-y:auto">';
+  r.answers.forEach(function(a, i) {
+    html += '<div style="margin-bottom:14px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid var(--accent)">';
+    html += '<div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px">Q' + a.q + ' · 维度 ' + a.dim + '</div>';
+    html += '<div style="font-size:0.9rem;margin-bottom:6px;font-weight:500">' + escHtml(a.text) + '</div>';
+    html += '<div style="font-size:0.85rem;color:var(--accent)"><strong>选 ' + a.opt + '：</strong>' + escHtml(a.optText) + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  var overlay = document.getElementById('detailOverlay');
+  var contentEl = document.getElementById('detailContent');
+  contentEl.innerHTML = html;
+  overlay.style.display = 'flex';
+}
+
+function exportCSV() {
+  var records = cloudRecords;
+  if (records.length === 0) {
+    showToast('⚠️ 没有可导出的数据');
+    return;
+  }
+
+  var bom = '﻿';
+  var header = '序号,时间,昵称,D依恋安全感,S情绪共振力,E关系决策力,O开放性,人格类型\n';
+  var rows = records.map(function(r, i) {
+    var d = new Date(r.created_at);
+    var timeStr = d.toLocaleString('zh-CN');
+    return [
+      i + 1, timeStr, r.nickname,
+      r.scores.D, r.scores.S, r.scores.E, r.scores.O,
+      r.personality ? r.personality.name : '-'
+    ].map(function(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
+  }).join('\n');
+
+  var blob = new Blob([bom + header + rows], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '恋爱人格代码_测试记录_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ CSV 文件已下载（云端数据）');
 }
 
 // ---------- Keyboard Shortcuts ----------
-document.addEventListener("keydown", function(e) {
-  if (e.key === "Escape") adminOverlay.classList.remove("open");
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') adminOverlay.classList.remove('open');
 });
 
 // ---------- Init ----------
-console.log("%c\u{1f49d} 恋爱人格代码 %cv2.0 - 四维模型版",
-  "font-size:1.2em;color:#e8784a", "color:#a89888");
-console.log("%c基于恋爱认知-行为四维模型 | 15道情景题 | 14种人格类型",
-  "color:#6b5d53;font-size:0.85em");
-console.log("%cCloudflare Pages Edition",
-  "color:#a89888;font-size:0.8em;font-style:italic");
+console.log('%c💝 恋爱人格代码 %cv2.0 - 四维模型版',
+  'font-size:1.2em;color:#e8784a', 'color:#a89888');
+console.log('%c基于恋爱认知-行为四维模型 | 15道情景题 | 14种人格类型',
+  'color:#6b5d53;font-size:0.85em');
+console.log('%cDesigned with Taste Skill v2',
+  'color:#a89888;font-size:0.8em;font-style:italic');
 
 })();
+// vim: ts=2 sw=2
 </script>
 
 </body>
