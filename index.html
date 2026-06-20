@@ -1318,8 +1318,7 @@ function submitToCloud() {
     body: JSON.stringify({
       nickname: state.nickname,
       scores: state.scores,
-      code: code,
-      personality: { id: p.id, name: p.name, emoji: p.emoji },
+      personality: { name: p.emoji + ' ' + p.name },
       answers: answers
     })
   }).then(function(res) { return res.json(); })
@@ -1426,7 +1425,7 @@ function renderAdminDashboard() {
     html += '<div class="admin-empty">暂无云端测试记录<br><small style="color:var(--text-muted)">有人提交测试后，数据会自动出现在这里</small></div>';
   } else {
     html += '<div style="overflow-x:auto"><table class="admin-table"><thead><tr>';
-    html += '<th>#</th><th>时间</th><th>昵称</th><th>人格代码</th><th>D安全感</th><th>S共振力</th><th>E决策力</th><th>O开放性</th><th>人格类型</th><th>详情</th>';
+    html += '<th>#</th><th>时间</th><th>昵称</th><th>D安全感</th><th>S共振力</th><th>E决策力</th><th>O开放性</th><th>人格类型</th><th>详情</th>';
     html += '</tr></thead><tbody>';
 
     records.forEach(function(r, i) {
@@ -1436,12 +1435,12 @@ function renderAdminDashboard() {
       html += '<td>' + (i + 1) + '</td>';
       html += '<td>' + timeStr + '</td>';
       html += '<td>' + escHtml(r.nickname) + '</td>';
-      html += '<td style="font-family:monospace;font-size:0.75rem">' + r.code + '</td>';
+      // code column removed - DB stores personality_type instead
       html += '<td>' + (r.scores.D || '-') + '</td>';
       html += '<td>' + (r.scores.S || '-') + '</td>';
       html += '<td>' + (r.scores.E || '-') + '</td>';
       html += '<td>' + (r.scores.O || '-') + '</td>';
-      html += '<td>' + (r.personality ? r.personality.emoji + ' ' + r.personality.name : '-') + '</td>';
+      html += '<td>' + (r.personality_type || '-') + '</td>';
       html += '<td><button class="btn btn-ghost btn-small btn-detail" data-idx="' + i + '">📋 查看答题</button></td>';
       html += '</tr>';
     });
@@ -1514,7 +1513,7 @@ function showAnswerDetail(idx) {
   html += "<button class=\"admin-close\" onclick=\"document.getElementById('detailOverlay').style.display='none'\">&times;</button>";
   html += '<h3>📋 ' + escHtml(r.nickname) + ' 的答题详情</h3>';
   html += '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">';
-  html += '人格类型：' + (r.personality ? r.personality.emoji + ' ' + r.personality.name : '-') + ' &nbsp;|&nbsp; ';
+  html += '人格类型：' + (r.personality_type || '-') + ' &nbsp;|&nbsp; ';
   html += '代码：<code>' + r.code + '</code></p>';
 
   html += '<div style="max-height:60vh;overflow-y:auto">';
@@ -1541,12 +1540,12 @@ function exportCSV() {
   }
 
   var bom = '﻿';
-  var header = '序号,时间,昵称,人格代码,D依恋安全感,S情绪共振力,E关系决策力,O开放性,人格类型\n';
+  var header = '序号,时间,昵称,D依恋安全感,S情绪共振力,E关系决策力,O开放性,人格类型\n';
   var rows = records.map(function(r, i) {
     var d = new Date(r.created_at);
     var timeStr = d.toLocaleString('zh-CN');
     return [
-      i + 1, timeStr, r.nickname, r.code,
+      i + 1, timeStr, r.nickname,
       r.scores.D, r.scores.S, r.scores.E, r.scores.O,
       r.personality ? r.personality.name : '-'
     ].map(function(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
