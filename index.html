@@ -6,7 +6,7 @@
 <title>恋爱人格代码</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================
    Designed with Taste Skill v2
@@ -24,23 +24,23 @@
    Layout: Asymmetric hero, Grid-first, no centering
    ============================================ */
 :root {
-  --bg-deep: #0f0a06;
-  --bg-surface: #1a1210;
-  --glass: rgba(25, 16, 10, 0.65);
-  --glass-hover: rgba(35, 22, 14, 0.8);
-  --accent: #e8784a;
-  --accent-soft: rgba(232, 120, 74, 0.18);
-  --accent-glow: rgba(232, 120, 74, 0.35);
-  --text: #faf5f0;
-  --text-dim: #a89888;
-  --text-muted: #6b5d53;
-  --border: rgba(232, 120, 74, 0.12);
-  --border-active: rgba(232, 120, 74, 0.4);
-  --radius: 14px;
-  --radius-sm: 10px;
-  --font-display: 'Outfit', system-ui, sans-serif;
-  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-accent: 'Playfair Display', 'Georgia', serif;
+  --bg-deep: #f8fafc;
+  --bg-surface: #ffffff;
+  --glass: rgba(255, 255, 255, 0.85);
+  --glass-hover: rgba(241, 245, 249, 0.95);
+  --accent: #4762b3;
+  --accent-soft: rgba(71, 98, 179, 0.12);
+  --accent-glow: rgba(71, 98, 179, 0.2);
+  --text: #1e293b;
+  --text-dim: #475569;
+  --text-muted: #94a3b8;
+  --border: rgba(71, 98, 179, 0.12);
+  --border-active: rgba(71, 98, 179, 0.35);
+  --radius: 12px;
+  --radius-sm: 6px;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-accent: 'Inter', system-ui, -apple-system, sans-serif;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -51,7 +51,7 @@ html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoot
 
 body {
   font-family: var(--font-body);
-  background: var(--bg-deep);
+  background: var(--bg-deep); color: var(--text);
   color: var(--text);
   min-height: 100dvh;
   overflow-x: hidden;
@@ -61,9 +61,8 @@ body {
 .bg-ambient {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 60% at 30% 20%, rgba(232,120,74,0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 80% at 80% 70%, rgba(232,120,74,0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(180,100,60,0.03) 0%, transparent 100%);
+    radial-gradient(ellipse 80% 60% at 30% 20%, rgba(71,98,179,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 80% 70%, rgba(71,98,179,0.02) 0%, transparent 70%);
 }
 
 .bg-ambient::before {
@@ -135,8 +134,8 @@ body {
 
 .landing-orb {
   width: 240px; height: 240px; border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, rgba(232,120,74,0.25) 0%, rgba(232,120,74,0.05) 50%, transparent 70%);
-  box-shadow: 0 0 80px rgba(232,120,74,0.2), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06);
+  background: radial-gradient(circle at 40% 35%, rgba(71,98,179,0.2) 0%, rgba(232,120,74,0.05) 50%, transparent 70%);
+  box-shadow: 0 0 60px rgba(71,98,179,0.1), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06);
   animation: orbPulse 4s ease-in-out infinite;
   position: relative;
 }
@@ -148,8 +147,8 @@ body {
 }
 
 @keyframes orbPulse {
-  0%, 100% { box-shadow: 0 0 80px rgba(232,120,74,0.2), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06); }
-  50% { box-shadow: 0 0 120px rgba(232,120,74,0.3), 0 0 200px rgba(232,120,74,0.12), inset 0 0 80px rgba(232,120,74,0.1); }
+  0%, 100% { box-shadow: 0 0 60px rgba(71,98,179,0.1), 0 0 160px rgba(232,120,74,0.08), inset 0 0 60px rgba(232,120,74,0.06); }
+  50% { box-shadow: 0 0 80px rgba(71,98,179,0.15), 0 0 200px rgba(232,120,74,0.12), inset 0 0 80px rgba(232,120,74,0.1); }
 }
 
 @keyframes orbFloat {
@@ -163,7 +162,7 @@ body {
 .nickname-input {
   font-family: var(--font-body);
   font-size: 1rem; padding: 14px 18px;
-  background: var(--glass); color: var(--text);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); color: var(--text);
   border: 1.5px solid var(--border);
   border-radius: var(--radius); outline: none;
   transition: all 0.3s var(--ease-out);
@@ -189,12 +188,12 @@ body {
 
 .btn-primary {
   background: var(--accent); color: #fff;
-  box-shadow: 0 2px 20px rgba(232,120,74,0.3);
+  box-shadow: 0 2px 16px rgba(71,98,179,0.2);
 }
 
 .btn-primary:hover {
   background: #f08050;
-  box-shadow: 0 4px 28px rgba(232,120,74,0.45);
+  box-shadow: 0 4px 24px rgba(71,98,179,0.3);
   transform: translateY(-1px);
 }
 
@@ -241,7 +240,7 @@ body {
   font-family: var(--font-body);
   font-size: 0.92rem; line-height: 1.5;
   padding: 16px 18px; text-align: left;
-  background: var(--glass); color: var(--text-dim);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); color: var(--text-dim);
   border: 1.5px solid var(--border);
   border-radius: var(--radius); cursor: pointer;
   transition: all 0.3s var(--ease-out);
@@ -295,7 +294,7 @@ body {
 }
 
 .result-card {
-  background: var(--glass);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
   padding: 32px 28px;
@@ -362,7 +361,7 @@ body {
 
 /* Radar card */
 .radar-card {
-  background: var(--glass);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
   padding: 28px 20px;
@@ -400,7 +399,7 @@ body {
 /* Toast */
 .toast {
   position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
-  background: var(--glass); color: var(--text);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); color: var(--text);
   border: 1px solid var(--border-active);
   padding: 12px 24px; border-radius: var(--radius);
   font-size: 0.9rem; z-index: 200;
@@ -442,7 +441,7 @@ body {
 .admin-overlay.open { display: flex; }
 
 .admin-panel {
-  background: var(--bg-surface);
+  background: var(--bg-surface); color: var(--text);
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
   padding: 32px; max-width: 860px; width: 92vw; max-height: 82dvh;
@@ -567,7 +566,7 @@ body {
 /* Mode Select Bento Grid */
 .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 520px; }
 .mode-card {
-  background: var(--glass); border: 1.5px solid var(--border);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1.5px solid var(--border);
   border-radius: var(--radius); padding: 28px 22px; cursor: pointer;
   transition: all 0.35s var(--ease-out); position: relative; overflow: hidden;
   display: flex; flex-direction: column; gap: 10px;
@@ -581,7 +580,7 @@ body {
 /* Psychologist Cards */
 .psycho-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 480px; }
 .psycho-card {
-  background: var(--glass); border: 1.5px solid var(--border);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1.5px solid var(--border);
   border-radius: var(--radius); padding: 16px 18px; cursor: pointer;
   transition: all 0.3s var(--ease-out);
   display: flex; align-items: center; gap: 14px;
@@ -611,7 +610,7 @@ body {
   padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; line-height: 1.6;
   color: var(--text); word-break: break-word;
 }
-.chat-msg.ai .chat-bubble { background: var(--glass); border: 1px solid var(--border); border-top-left-radius: 4px; }
+.chat-msg.ai .chat-bubble { background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1px solid var(--border); border-top-left-radius: 4px; }
 .chat-msg.user .chat-bubble { background: var(--accent); color: #fff; border-top-right-radius: 4px; }
 .chat-actions { display: flex; gap: 6px; margin-top: 4px; }
 .chat-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; }
@@ -619,7 +618,7 @@ body {
 .chat-btn.playing { border-color: var(--accent); color: var(--accent); animation: pulseBtn 0.8s infinite; }
 @keyframes pulseBtn { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 .chat-input-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; padding: 12px 16px 20px; background: linear-gradient(transparent, var(--bg-deep) 40%); display: flex; gap: 8px; z-index: 50; }
-.chat-input { flex: 1; background: var(--glass); border: 1.5px solid var(--border); border-radius: 24px; padding: 12px 18px; color: var(--text); font-size: 0.9rem; outline: none; font-family: var(--font-body); }
+.chat-input { flex: 1; background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1.5px solid var(--border); border-radius: 24px; padding: 12px 18px; color: var(--text); font-size: 0.9rem; outline: none; font-family: var(--font-body); }
 .chat-input:focus { border-color: var(--accent); }
 .chat-send { background: var(--accent); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 1.1rem; flex-shrink: 0; }
 .chat-send:hover { filter: brightness(1.15); }
@@ -635,7 +634,7 @@ body {
 /* Gallery Grid */
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; width: 100%; max-width: 900px; padding: 16px 0; }
 .gallery-card {
-  background: var(--glass); border: 1.5px solid var(--border); border-radius: var(--radius);
+  background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1.5px solid var(--border); border-radius: var(--radius);
   padding: 20px; cursor: pointer; transition: all 0.3s var(--ease-out);
   display: flex; flex-direction: column; gap: 8px;
 }
@@ -654,7 +653,7 @@ body {
 .screen-header p { color: var(--text-dim); font-size: 0.85rem; }
 
 /* AI Analysis */
-.ai-analysis { margin-top: 20px; padding: 18px; background: var(--glass); border: 1.5px solid var(--border); border-radius: var(--radius); display: none; }
+.ai-analysis { margin-top: 20px; padding: 18px; background: var(--glass); box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1.5px solid var(--border); border-radius: var(--radius); display: none; }
 .ai-analysis.visible { display: block; animation: msgIn 0.5s var(--ease-out); }
 .ai-analysis-title { font-family: var(--font-display); font-size: 1rem; margin-bottom: 10px; color: var(--accent); }
 .ai-analysis-text { font-size: 0.88rem; line-height: 1.7; color: var(--text-dim); }
@@ -2098,7 +2097,7 @@ function startRandomTest() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      messages: [{ role: 'user', content: 'Generate 15 love/relationship psychology scenario questions in Chinese, based on the 4-dimension model (D: attachment security, S: emotional resonance, E: dominance, O: openness). Output as JSON array: [{"text":"...","dim":"D|S|E|O","options":[{"label":"A","text":"...","effect":{"D":-1,"S":0,"E":0,"O":0}},...]}]. Each question has 4 options (A,B,C,D). Each option effect is +1, -1, or 0 per dimension. Output ONLY the JSON array, no markdown.' }],
+      messages: [{ role: 'user', content: 'You are a JSON generator. Generate exactly 15 relationship psychology questions in Chinese. Output a valid JSON array with this exact structure for each question: {"text":"question in Chinese","dim":"D","options":[{"label":"A","text":"option A","effect":{"D":1,"S":0,"E":0,"O":0}},{"label":"B","text":"option B","effect":{"D":-1,"S":0,"E":0,"O":0}},{"label":"C","text":"option C","effect":{"D":0,"S":1,"E":0,"O":0}},{"label":"D","text":"option D","effect":{"D":0,"S":-1,"E":0,"O":0}}]}. Dimensions: D=attachment security, S=emotional resonance, E=dominance, O=openness. Each question must have EXACTLY 4 options (A,B,C,D). Each option effect MUST change exactly one dimension by +1 or -1. Vary the dim across questions. Output ONLY the JSON array, no other text.' }],
       persona_id: 'raw'
     })
   })
