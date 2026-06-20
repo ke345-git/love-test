@@ -99,7 +99,7 @@ body {
 }
 
 /* Landing */
-#screen-landing { display: none; flex: 1; align-items: flex-start; justify-content: center; flex-direction: column; padding: 12vh 0 8vh; }
+#screen-landing { display: none !important; flex: 1; align-items: flex-start; justify-content: center; flex-direction: column; padding: 12vh 0 8vh; }
 #screen-landing.active { display: flex; }
 
 .landing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; width: 100%; }
@@ -580,18 +580,19 @@ body {
 .mode-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
 
 /* Psychologist Cards */
-.psycho-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 500px; }
+.psycho-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 480px; }
 .psycho-card {
   background: var(--glass); border: 1.5px solid var(--border);
-  border-radius: var(--radius); padding: 22px 16px; cursor: pointer;
-  transition: all 0.3s var(--ease-out); text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  border-radius: var(--radius); padding: 16px 18px; cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  display: flex; align-items: center; gap: 14px;
 }
 .psycho-card:hover { background: var(--glass-hover); border-color: var(--border-active); transform: translateY(-2px); }
-.psycho-avatar { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); flex-shrink: 0; }
+.psycho-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); flex-shrink: 0; }
 .psycho-avatar svg { width: 100%; height: 100%; display: block; }
-.psycho-name { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--text); }
-.psycho-theory { font-size: 0.72rem; color: var(--accent); opacity: 0.85; }
+.psycho-name { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; color: var(--text); }
+.psycho-theory { font-size: 0.72rem; color: var(--text-dim); }
+.psycho-desc-text { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
 
 /* Navigation Bar */
 .nav-bar { display: flex; align-items: center; gap: 12px; padding: 16px 0; width: 100%; max-width: 600px; }
@@ -674,6 +675,15 @@ body {
   .chat-msg { max-width: 92%; }
   .chat-bubble { padding: 10px 14px; font-size: 0.85rem; }
 }
+
+/* Hero in mode-select */
+.mode-hero { text-align: center; padding: 36px 0 24px; }
+.mode-hero-orb { font-size: 3rem; margin-bottom: 12px; animation: orbFloat 3s ease-in-out infinite; }
+.mode-hero-title { font-family: var(--font-display); font-size: clamp(2rem,5vw,2.8rem); font-weight: 600; line-height: 1.1; color: var(--text); }
+.mode-hero-title span { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
+.mode-hero-desc { font-size: 0.9rem; color: var(--text-dim); margin-top: 8px; }
+.mode-nickname-wrap { display: flex; justify-content: center; margin-top: 20px; }
+.mode-nickname-wrap .nickname-input { max-width: 280px; text-align: center; }
 </style>
 </head>
 <body>
@@ -1159,6 +1169,9 @@ function updateProgress() {
 nicknameInput.addEventListener('input', function() {
   state.nickname = nicknameInput.value.trim();
   btnStart.disabled = !state.nickname;
+  // Sync to hero input
+  var n2 = document.getElementById('nicknameInput2');
+  if (n2) n2.value = state.nickname;
 });
 
 nicknameInput.addEventListener('keydown', function(e) {
@@ -1491,6 +1504,7 @@ function resetTest() {
   state.personality = null;
   state.nickname = '';
   nicknameInput.value = '';
+  var n2 = document.getElementById('nicknameInput2'); if (n2) n2.value = '';
   btnStart.disabled = true;
   progressWrap.style.display = 'none';
   progressBar.style.width = '0%';
@@ -1805,7 +1819,7 @@ const galleryGrid = document.getElementById('galleryGrid');
 
 // ========== PSYCHOLOGIST DATA ==========
 const PSYCHOLOGISTS = [
-  { id: 'nuwa', name: '女娲', emoji: '🧘', color: '#4a2a3a', theory: '依恋理论 + 客体关系', desc: '温柔包容的治愈者，帮你看见关系中的安全感根源' },
+  { id: 'adler', name: '阿德勒', emoji: '🤝', color: '#3a5040', theory: '个体心理学', desc: '温暖的鼓励者，相信每个人都有追求卓越的内在力量' },
   { id: 'jung', name: '荣格博士', emoji: '🧔', color: '#3a4550', theory: '分析心理学', desc: '深邃的智慧老人，用原型和象征解读你的关系模式' },
   { id: 'fromm', name: '弗洛姆教授', emoji: '📚', color: '#404040', theory: '人本精神分析', desc: '理性的温暖声音，教你爱的艺术与存在的方式' },
   { id: 'satir', name: '萨提尔', emoji: '🌸', color: '#6a4050', theory: '家庭治疗', desc: '温暖的接纳者，帮你发现原生家庭雕刻的关系密码' }
@@ -1841,6 +1855,7 @@ btnStart.addEventListener('click', function() {
 document.querySelectorAll('.mode-card').forEach(function(card) {
   card.addEventListener('click', function() {
     var mode = this.dataset.mode;
+    if (!state.nickname) { showToast('请先输入昵称'); return; }
     if (mode === 'standard') {
       startTest();
     } else if (mode === 'chat') {
@@ -1859,9 +1874,9 @@ document.querySelectorAll('.mode-card').forEach(function(card) {
 function renderPsychologistCards() {
   var html = '';
   PSYCHOLOGISTS.forEach(function(p) {
-    html += '<div class="psycho-card" data-id="' + p.id + '">';
+    html += '<div class="psycho-card" data-id="' + p.id + '" style="border-left:3px solid ' + p.color + '">';
     html += '<div class="psycho-avatar" style="background:' + p.color + ';display:flex;align-items:center;justify-content:center;font-size:2rem">' + p.emoji + '</div>';
-    html += '<div class="psycho-name">' + p.emoji + ' ' + p.name + '</div>';
+    html += '<div style="display:flex;flex-direction:column;flex:1;gap:4px"><div class="psycho-name">' + p.emoji + ' ' + p.name + '</div><div class="psycho-theory">' + p.theory + '</div><div class="psycho-desc-text">' + p.desc + '</div></div>';
     html += '<div class="psycho-theory">' + p.theory + '</div>';
     html += '</div>';
   });
@@ -1939,7 +1954,7 @@ function sendToAI(messages, callback) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       messages: messages,
-      persona_id: currentPersona ? currentPersona.id : 'nuwa'
+      persona_id: currentPersona ? currentPersona.id : 'adler'
     })
   })
   .then(function(r) { return r.json(); })
@@ -2028,11 +2043,11 @@ function playTTS(text) {
 
   // Try to match voice to persona
   var voices = window.speechSynthesis.getVoices();
-  var personaVoice = currentPersona ? currentPersona.id : 'nuwa';
+  var personaVoice = currentPersona ? currentPersona.id : 'adler';
 
   // Preference: find a good Chinese female/male voice
   var preferred = [];
-  if (personaVoice === 'nuwa' || personaVoice === 'satir') {
+  if (personaVoice === 'adler' || personaVoice === 'satir') {
     preferred = ['Tingting', 'Yaoyao', 'Microsoft Kangkang', 'female'];
   } else {
     preferred = ['Yunyang', 'Microsoft Yaoyao', 'male'];
@@ -2062,7 +2077,7 @@ function startRandomTest() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       messages: [{ role: 'user', content: 'Generate 15 love/relationship psychology scenario questions in Chinese, based on the 4-dimension model (D: attachment security, S: emotional resonance, E: dominance, O: openness). Output as JSON array: [{"text":"...","dim":"D|S|E|O","options":[{"label":"A","text":"...","effect":{"D":-1,"S":0,"E":0,"O":0}},...]}]. Each question has 4 options (A,B,C,D). Each option effect is +1, -1, or 0 per dimension. Output ONLY the JSON array, no markdown.' }],
-      persona_id: 'nuwa'
+      persona_id: 'adler'
     })
   })
   .then(function(r) { return r.json(); })
@@ -2225,7 +2240,7 @@ function generateAIAnalysis() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       messages: [{ role: 'user', content: prompt }],
-      persona_id: 'nuwa'
+      persona_id: 'adler'
     })
   })
   .then(function(r) { return r.json(); })
