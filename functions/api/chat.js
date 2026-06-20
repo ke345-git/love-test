@@ -117,7 +117,10 @@ export async function onRequest(context) {
     }
 
     const persona = PERSONAS[persona_id] || PERSONAS.adler;
-    const DEEPSEEK_KEY = env.DEEPSEEK_API_KEY;
+    // Try multiple key names (Cloudflare UI may add leading spaces)
+    const DEEPSEEK_KEY = env.DEEPSEEK_API_KEY
+      || Object.keys(env).find(function(k) { return k.trim() === 'DEEPSEEK_API_KEY'; })
+      && env[Object.keys(env).find(function(k) { return k.trim() === 'DEEPSEEK_API_KEY'; })];
 
     if (!DEEPSEEK_KEY) {
       return new Response(JSON.stringify({ error: 'AI 服务未配置' }), {
