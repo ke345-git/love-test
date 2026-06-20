@@ -1014,6 +1014,8 @@ function renderQuestion(index) {
 }
 
 function selectOption(questionIndex, optIdx) {
+  // Prevent duplicate clicks
+  if (state.answers[questionIndex] !== null) return;
   state.answers[questionIndex] = optIdx;
 
   questionWrap.querySelectorAll('.option-btn').forEach(function(btn, i) {
@@ -1084,6 +1086,7 @@ function classifyPersonality(scores) {
 
 // ---------- Finish Test ----------
 function finishTest() {
+  if (state.scores !== null) return; // Prevent double submission
   progressWrap.style.display = 'none';
   state.scores = calculateScores();
   state.personality = classifyPersonality(state.scores);
