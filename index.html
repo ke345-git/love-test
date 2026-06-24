@@ -693,7 +693,7 @@ body {
   <section id="screen-landing" style="display:none"></section>
   <input type="text" id="nicknameInput" style="display:none" aria-hidden="true">
   <button id="btnStart" style="display:none" aria-hidden="true"></button>
-  <button id="btnAdminTrigger" style="display:none" aria-hidden="true"></button>
+  <button id="btnAdminTrigger" style="position:fixed;bottom:20px;right:20px;z-index:99;background:var(--glass);color:var(--text-dim);border:1px solid var(--border);border-radius:20px;padding:10px 18px;font-size:0.82rem;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-family:system-ui,sans-serif" onmouseover="this.style.color='#faf5f0';this.style.borderColor='rgba(232,120,74,0.4)'" onmouseout="this.style.color='';this.style.borderColor=''">📊 管理后台</button>
 
   <div class="progress-wrap" id="progressWrap" style="display:none">
     <div class="progress-bar" id="progressBar"></div>
@@ -1510,22 +1510,38 @@ function resetTest() {
 var STORAGE_KEY = 'love_personality_4d_results';
 
 function saveResult() {
-  // 1. 本地备份（localStorage）
-  var records = cloudRecords;
+  var p = PERSONALITIES[state.personality];
+  // Build full answer detail for each question
+  var answersDetail = QUESTIONS.map(function(q, idx) {
+    var optIdx = state.answers[idx];
+    var opt = q.options[optIdx];
+    return { q: q.id, dim: q.dim, text: q.text, opt: opt.label, optText: opt.text };
+  });
+
+  // 1. Local backup (localStorage with full answer detail)
+  var records = getLocalRecords();
   records.push({
     time: new Date().toISOString(),
     nickname: state.nickname,
-    D: state.scores.D,
-    S: state.scores.S,
-    E: state.scores.E,
-    O: state.scores.O,
+    D: state.scores.D, S: state.scores.S, E: state.scores.E, O: state.scores.O,
     code: 'D' + state.scores.D + '-S' + state.scores.S + '-E' + state.scores.E + '-O' + state.scores.O,
-    personality: PERSONALITIES[state.personality].name
+    personality: p.name,
+    personality_type: p.emoji + ' ' + p.name,
+    scores: state.scores,
+    answers: answersDetail
   });
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  cloudRecords = records;
 
-  // 2. 提交到云端（Supabase）
+  // 2. Submit to Supabase cloud
   submitToCloud();
+}
+
+function getLocalRecords() {
+  try {
+    var data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (e) { return []; }
 }
 
 function submitToCloud() {
@@ -1627,12 +1643,10 @@ function fetchDashboard() {
     .then(function(res) { return res.json(); })
     .then(function(data) { cloudRecords = data || []; renderAdminDashboard(); })
     .catch(function(err) {
-      adminPanel.innerHTML = '<button class="admin-close" id="btnAdminClose2">&times;</button>' +
-        '<h3>Admin</h3>' +
-        '<div style="text-align:center;padding:20px;color:#e06060">Cannot connect to Supabase</div>' +
-        '<button class="btn btn-ghost btn-small" id="btnRetryLogin" style="margin:0 auto;display:block">Back</button>';
-      $('#btnAdminClose2').addEventListener('click', function() { adminOverlay.classList.remove('open'); });
-      $('#btnRetryLogin').addEventListener('click', renderAdminPanel);
+      // Fallback: load from localStorage when cloud unavailable
+      console.warn('Supabase unavailable, loading from localStorage');
+      cloudRecords = getLocalRecords();
+      renderAdminDashboard();
     });
 }
 
@@ -1654,7 +1668,7 @@ function renderAdminDashboard() {
     html += '</tr></thead><tbody>';
 
     records.forEach(function(r, i) {
-      var d = new Date(r.created_at);
+      var d = new Date(r.created_at || r.time);
       var timeStr = d.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
       html += '<tr>';
       html += '<td>' + (i + 1) + '</td>';
@@ -1769,8 +1783,8 @@ function exportCSV() {
     var timeStr = d.toLocaleString('zh-CN');
     return [
       i + 1, timeStr, r.nickname,
-      r.scores.D, r.scores.S, r.scores.E, r.scores.O,
-      r.personality ? r.personality.name : '-'
+      (r.scores ? r.scores.D : r.D), (r.scores ? r.scores.S : r.S), (r.scores ? r.scores.E : r.E), (r.scores ? r.scores.O : r.O),
+      r.personality_type || (r.personality && r.personality.name) || '-'
     ].map(function(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
   }).join('\n');
 
@@ -1781,7 +1795,7 @@ function exportCSV() {
   a.download = '恋爱人格代码_测试记录_' + new Date().toISOString().slice(0, 10) + '.csv';
   a.click();
   URL.revokeObjectURL(url);
-  showToast('✅ CSV 文件已下载（云端数据）');
+  showToast('✅ CSV 文件已下载');
 }
 
 // ---------- Keyboard Shortcuts ----------
